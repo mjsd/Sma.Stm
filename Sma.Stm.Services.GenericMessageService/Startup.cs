@@ -15,8 +15,10 @@ using Microsoft.Azure.ServiceBus;
 using Sma.Stm.EventBus.Abstractions;
 using Autofac;
 using Sma.Stm.EventBus;
+using Sma.Stm.EventBus.Events;
 using Sma.Stm.Services.GenericMessageService.IntegrationEvents.EventHandling;
-using Sma.Stm.Services.GenericMessageService.IntegrationEvents.Events;
+using Microsoft.AspNetCore.Mvc;
+using Sma.Stm.Ssc;
 
 namespace Sma.Stm.Services.GenericMessageService
 {
@@ -34,7 +36,20 @@ namespace Sma.Stm.Services.GenericMessageService
         {
             services.AddSingleton(new DocumentDbRepository<UploadedMessage>("https://stmtest.documents.azure.com:443/", "2JCUjkUBgrjnCbmYR9mot5w6n6eWlVtlhqhTra8xWnAJFFEjixWzaQh4niUGM9GVnSVlViXVkJVl1a6lemosGA==", "StmTest", "UploadedMessage"));
             services.AddSingleton(new DocumentDbRepository<PublishedMessage>("https://stmtest.documents.azure.com:443/", "2JCUjkUBgrjnCbmYR9mot5w6n6eWlVtlhqhTra8xWnAJFFEjixWzaQh4niUGM9GVnSVlViXVkJVl1a6lemosGA==", "StmTest", "PublishedStmMessage"));
-            services.AddMvc();
+
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(typeof(SeaSwimActionFilter));
+            });
+
+            services.AddApiVersioning(option =>
+            {
+                option.ReportApiVersions = true;
+                option.AssumeDefaultVersionWhenUnspecified = true;
+                option.DefaultApiVersion = new ApiVersion(1, 0);
+            });
+
+            services.AddScoped<SeaSwimInstanceContextService>();
 
             services.AddSwaggerGen(c =>
             {
@@ -93,12 +108,14 @@ namespace Sma.Stm.Services.GenericMessageService
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, 
+            IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();

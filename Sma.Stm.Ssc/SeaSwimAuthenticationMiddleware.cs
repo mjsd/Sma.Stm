@@ -39,7 +39,13 @@ namespace Sma.Stm.Ssc
             }
             if (context.Connection.ClientCertificate == null)
             {
-                throw new ArgumentNullException("Client certificate");
+                // throw new ArgumentNullException("Client certificate");
+                var instanceContextService = context.RequestServices.GetRequiredService<SeaSwimInstanceContextService>();
+                instanceContextService.CallerOrgId = "orgid";
+                instanceContextService.CallerServiceId = "serviceid";
+
+                await _next.Invoke(context);
+                return;
             }
 
             var errors = string.Empty;

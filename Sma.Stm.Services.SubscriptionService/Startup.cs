@@ -15,7 +15,8 @@ using Sma.Stm.EventBus.Abstractions;
 using Autofac;
 using Sma.Stm.EventBus;
 using Sma.Stm.Services.SubscriptionService.IntegrationEvents.EventHandling;
-using Sma.Stm.Services.SubscriptionService.IntegrationEvents.Events;
+using Sma.Stm.Services.SubscriptionService.Models;
+using Sma.Stm.EventBus.Events;
 
 namespace Sma.Stm.Services.SubscriptionService
 {
@@ -31,7 +32,7 @@ namespace Sma.Stm.Services.SubscriptionService
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            //services.AddSingleton(new DocumentDbRepository<UploadedMessage>("https://stmtest.documents.azure.com:443/", "2JCUjkUBgrjnCbmYR9mot5w6n6eWlVtlhqhTra8xWnAJFFEjixWzaQh4niUGM9GVnSVlViXVkJVl1a6lemosGA==", "StmTest", "StmMessage"));
+            services.AddSingleton(new DocumentDbRepository<SubscriptionList>("https://stmtest.documents.azure.com:443/", "2JCUjkUBgrjnCbmYR9mot5w6n6eWlVtlhqhTra8xWnAJFFEjixWzaQh4niUGM9GVnSVlViXVkJVl1a6lemosGA==", "StmTest", "Subscription"));
             services.AddMvc();
 
             services.AddSwaggerGen(c =>
@@ -87,7 +88,6 @@ namespace Sma.Stm.Services.SubscriptionService
             var container = new ContainerBuilder();
             container.Populate(services);
             return new AutofacServiceProvider(container.Build());
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

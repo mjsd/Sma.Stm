@@ -2,11 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="2.0.0" />
+    <PackageReference Include="Serilog.Extensions.Logging.File" Version="2.0.0-dev-00023" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="1.0.0" />
   </ItemGroup>
 
@@ -16,9 +19,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Sma.Stm.Common\Sma.Stm.Common.csproj" />
+    <ProjectReference Include="..\Sma.Stm.EventBus\Sma.Stm.EventBus.Events\Sma.Stm.EventBus.Events.csproj" />
     <ProjectReference Include="..\Sma.Stm.EventBus\Sma.Stm.EventBusRabbitMQ\Sma.Stm.EventBusRabbitMQ.csproj" />
     <ProjectReference Include="..\Sma.Stm.EventBus\Sma.Stm.EventBusServiceBus\Sma.Stm.EventBusServiceBus.csproj" />
     <ProjectReference Include="..\Sma.Stm.EventBus\Sma.Stm.EventBus\Sma.Stm.EventBus.csproj" />
+    <ProjectReference Include="..\Sma.Stm.Ssc.Contract\Sma.Stm.Ssc.Contract.csproj" />
+    <ProjectReference Include="..\Sma.Stm.Ssc\Sma.Stm.Ssc.csproj" />
   </ItemGroup>
 
 </Project>

@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Sma.Stm.Common.DocumentDb;
 using Sma.Stm.EventBus.Abstractions;
 using Sma.Stm.Services.AuthorizationServiceService.Models;
-using Sma.Stm.Services.AuthorizationServiceService.IntegrationEvents.Events;
+using Sma.Stm.EventBus.Events;
+using Sma.Stm.Services.AuthorizationService.DataAccess;
+using Microsoft.EntityFrameworkCore;
 
 namespace Sma.Stm.Services.AuthorizationService.Controllers
 {
@@ -14,12 +16,12 @@ namespace Sma.Stm.Services.AuthorizationService.Controllers
     public class AuthorizationController : Controller
     {
         private readonly IEventBus _eventBus;
-        private readonly DocumentDbRepository<AuthorizationList> _authorizationRepository;
+        private readonly AuthorizationDbContext _dbCOntext;
 
-        public AuthorizationController(DocumentDbRepository<AuthorizationList> authorizationRepository, IEventBus eventBus)
+        public AuthorizationController(AuthorizationDbContext dbCOntext, IEventBus eventBus)
         {
-            _authorizationRepository = authorizationRepository;
             _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
+            _dbCOntext = dbCOntext ?? throw new ArgumentNullException(nameof(dbCOntext));
         }
 
         [HttpGet]
@@ -28,8 +30,9 @@ namespace Sma.Stm.Services.AuthorizationService.Controllers
         {
             try
             {
-                var acl = await _authorizationRepository.GetItemAsync(orgId);
-                if (acl != null && acl.Authorizations.FirstOrDefault(x=>x.DataId == dataId) != null)
+                var acl = await _dbCOntext.Authorizations.FirstOrDefaultAsync(x => x.OrgId == orgId && x.DataId == dataId);
+
+                if (acl != null)
                 {
                     return Ok(true);
                 }
@@ -47,8 +50,8 @@ namespace Sma.Stm.Services.AuthorizationService.Controllers
         {
             try
             {
-                var items = await _authorizationRepository.GetItemsAsync(x => x != null);
-                return Ok(items);
+                var acl = await _dbCOntext.Authorizations.ToListAsync();
+                return Ok(acl);
             }
             catch (Exception ex)
             {
@@ -57,16 +60,11 @@ namespace Sma.Stm.Services.AuthorizationService.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult> Get(string id)
+        public async Task<ActionResult> Get(int id)
         {
-            if (string.IsNullOrEmpty(id))
-            {
-                return BadRequest();
-            }
-
             try
             {
-                var item = await _authorizationRepository.GetItemAsync(id);
+                var item = await _dbCOntext.Authorizations.Where(x => x.Id2 == id).ToListAsync();
                 if (item == null)
                 {
                     return NotFound();
@@ -90,29 +88,20 @@ namespace Sma.Stm.Services.AuthorizationService.Controllers
 
             try
             {
-                var acl = await _authorizationRepository.GetItemAsync(item.Id);
+                var acl = await _dbCOntext.Authorizations.FirstOrDefaultAsync(x => x.Id2 == item.Id2);
                 if (acl == null)
                 {
-                    acl = new AuthorizationList
-                    {
-                        Id = item.Id,
-                        Authorizations = new List<AuthorizationItem>
-                        {
-                            item
-                        }
-                    };
-                    await _authorizationRepository.CreateItemAsync(acl);
+                    _dbCOntext.Authorizations.Add(item);
                 }
                 else
                 {
-                    var existing = acl.Authorizations.FirstOrDefault(x => x.DataId == item.DataId);
-                    if (existing == null)
-                    {
-                        acl.Authorizations.Add(item);
-                    }
-
-                    await _authorizationRepository.UpdateItemAsync(acl.Id, acl);
+                    acl.Id2 = item.Id2;
+                    acl.DataId = item.DataId;
+                    _dbCOntext.Authorizations.Update(acl);
                 }
+
+
+                await _dbCOntext.SaveChangesAsync();
                 return Ok();
             }
             catch (Exception ex)
@@ -131,22 +120,6 @@ namespace Sma.Stm.Services.AuthorizationService.Controllers
 
             try
             {
-                var acl = await _authorizationRepository.GetItemAsync(item.Id);
-                if (acl == null || acl.Authorizations.FirstOrDefault(x => x.DataId == item.DataId) == null)
-                {
-                    return Ok("Not found");
-                }
-
-                acl.Authorizations.Remove(acl.Authorizations.FirstOrDefault(x => x.DataId == item.DataId));
-                await _authorizationRepository.UpdateItemAsync(acl.Id, acl);
-
-                var @event = new AuthorizationRemovedIntegrationEvent
-                {
-                    DataId = item.DataId,
-                    OrgId = item.Id
-                };
-                _eventBus.Publish(@event);
-
                 return Ok();
             }
             catch (Exception ex)

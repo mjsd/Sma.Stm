@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Sma.Stm.Common\Sma.Stm.Common.csproj" />
+    <ProjectReference Include="..\Sma.Stm.EventBus\Sma.Stm.EventBus.Events\Sma.Stm.EventBus.Events.csproj" />
     <ProjectReference Include="..\Sma.Stm.EventBus\Sma.Stm.EventBusRabbitMQ\Sma.Stm.EventBusRabbitMQ.csproj" />
     <ProjectReference Include="..\Sma.Stm.EventBus\Sma.Stm.EventBusServiceBus\Sma.Stm.EventBusServiceBus.csproj" />
     <ProjectReference Include="..\Sma.Stm.EventBus\Sma.Stm.EventBus\Sma.Stm.EventBus.csproj" />

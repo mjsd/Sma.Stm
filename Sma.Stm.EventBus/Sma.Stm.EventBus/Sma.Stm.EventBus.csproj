@@ -1,12 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>Microsoft.eShopOnContainers.BuildingBlocks.EventBus</RootNamespace>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <RootNamespace>Sma.Stm.EventBus</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sma.Stm.EventBus.Events\Sma.Stm.EventBus.Events.csproj" />
   </ItemGroup>
 
 </Project>

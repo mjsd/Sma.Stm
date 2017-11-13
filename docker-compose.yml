@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  sma.stm.services.genericmessageservice:
+    image: sma.stm.services.genericmessageservice
+    build:
+      context: ./Sma.Stm.Services.GenericMessageService
+      dockerfile: Dockerfile
+    depends_on:
+      - rabbitmq
+      - sma.stm.services.authorizationservice
+
+  sma.stm.services.authorizationservice:
+    image: sma.stm.services.authorizationservice
+    build:
+      context: ./Sma.Stm.Services.AuthorizationService
+      dockerfile: Dockerfile
+
+  sma.stm.services.subscriptionservice:
+    image: sma.stm.services.subscriptionservice
+    build:
+      context: ./Sma.Stm.Services.SubscriptionService
+      dockerfile: Dockerfile
+
+  sma.stm.apigateway:
+    image: sma.stm.apigateway
+    build:
+      context: ./Sma.Stm.ApiGateway
+      dockerfile: Dockerfile
+
+  sma.stm.messagesenderservice:
+    image: sma.stm.messagesenderservice
+    build:
+      context: ./Sma.Stm.MessageSenderService
+      dockerfile: Dockerfile
+
+  rabbitmq:
+    image: rabbitmq:3-management
+
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+        POSTGRES_PASSWORD: "1234"
+    ports:
+      - "5432:5432"

@@ -12,7 +12,6 @@ namespace Sma.Stm.Common.Security
         {
             errors = string.Empty;
 
-
             X509Chain chain = new X509Chain();
             chain.ChainPolicy = new X509ChainPolicy()
             {

@@ -1,24 +1,10 @@
 ﻿{
   "Routes": {
-    "/": {
-      "Scheme": "http",
-      "Host": "localhost",
-      "PathBase": null,
-      "Path": "/STM.VIS.Services.Public/swagger",
-      "QueryString": null
-    },
     "/voyagePlans": {
       "Scheme": "http",
-      "Host": "localhost",
+      "Host": "sma.stm.services.genericmessageservice",
       "PathBase": null,
-      "Path": "/STM.VIS.Services.Public/stm/voyagePlans",
-      "QueryString": null
-    },
-    "/subscription": {
-      "Scheme": "http",
-      "Host": "localhost",
-      "PathBase": null,
-      "Path": "/STM.VIS.Services.Public/stm/voyagePlans/subscription",
+      "Path": "/api/v1/Public/Message",
       "QueryString": null
     }
   }

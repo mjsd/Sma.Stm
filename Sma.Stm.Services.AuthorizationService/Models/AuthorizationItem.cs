@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 
 namespace Sma.Stm.Services.AuthorizationServiceService.Models
 {
-    public class AuthorizationItem : DocumentBase
+    public class AuthorizationItem
     {
-        public string Name { get; set; }
+        public string Id { get; set; }
+        public int Id2 { get; set; }
+
+        public string OrgId { get; set; }
 
         public string DataId { get; set; }
     }

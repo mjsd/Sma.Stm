@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,15 +15,21 @@
   <ItemGroup>
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
-  </ItemGroup>
+	<DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
+   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Sma.Stm.Common\Sma.Stm.Common.csproj" />
+    <ProjectReference Include="..\Sma.Stm.EventBus\Sma.Stm.EventBus.Events\Sma.Stm.EventBus.Events.csproj" />
     <ProjectReference Include="..\Sma.Stm.EventBus\Sma.Stm.EventBusRabbitMQ\Sma.Stm.EventBusRabbitMQ.csproj" />
     <ProjectReference Include="..\Sma.Stm.EventBus\Sma.Stm.EventBusServiceBus\Sma.Stm.EventBusServiceBus.csproj" />
     <ProjectReference Include="..\Sma.Stm.EventBus\Sma.Stm.EventBus\Sma.Stm.EventBus.csproj" />

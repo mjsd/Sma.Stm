@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Options;
+using Sma.Stm.Ssc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,20 +14,15 @@ namespace Sma.Stm.ApiGateway
     {
         private readonly RequestDelegate _next;
         private readonly ApiGatewayOptions _options;
+        private readonly SeaSwimInstanceContextService _seaSwimInstanceContextService;
 
-        public ApiGatewayMiddleware(RequestDelegate next, IOptions<ApiGatewayOptions> options)
+        public ApiGatewayMiddleware(RequestDelegate next, 
+            IOptions<ApiGatewayOptions> options,
+            SeaSwimInstanceContextService seaSwimInstanceContextService)
         {
-            if (next == null)
-            {
-                throw new ArgumentNullException(nameof(next));
-            }
-            if (options == null)
-            {
-                throw new ArgumentNullException(nameof(options));
-            }
-
-            _next = next;
-            _options = options.Value;
+            _next = next ?? throw new ArgumentNullException(nameof(next));
+            _options = options.Value ?? throw new ArgumentNullException(nameof(options));
+            _seaSwimInstanceContextService = seaSwimInstanceContextService ?? throw new ArgumentNullException(nameof(seaSwimInstanceContextService));
         }
 
         public async Task Invoke(HttpContext context)
@@ -35,9 +31,6 @@ namespace Sma.Stm.ApiGateway
             {
                 throw new ArgumentNullException(nameof(context));
             }
-
-            X509Certificate2 x = null;
-            x = context.Connection.ClientCertificate;
 
             var requestPath = context.Request.Path;
 
@@ -68,6 +61,9 @@ namespace Sma.Stm.ApiGateway
                 queryString = context.Request.QueryString.Value;
 
             var uri = new Uri(UriHelper.BuildAbsolute(scheme, new HostString(host), target.PathBase, path, new QueryString(queryString)));
+
+            context.Request.Headers.Append("SeaSWIM-CallerOrgId", _seaSwimInstanceContextService.CallerOrgId);
+            context.Request.Headers.Append("SeaSWIM-CallerServiceId", _seaSwimInstanceContextService.CallerServiceId);
 
             await context.ProxyRequest(uri);
         }

@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  sma.stm.services.genericmessageservice:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - EventBusConnection=${AZURE_SERVICE_BUS:-rabbitmq}
+      - EventBusUserName=${SERVICE_BUS_USERNAME}
+      - EventBusPassword=${SERVICE_BUS_PASSWORD}      
+      - AzureServiceBusEnabled=False
+    ports:
+      - "5001:80"
+
+  sma.stm.services.authorizationservice:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - EventBusConnection=${AZURE_SERVICE_BUS:-rabbitmq}
+      - EventBusUserName=${SERVICE_BUS_USERNAME}
+      - EventBusPassword=${SERVICE_BUS_PASSWORD}      
+      - AzureServiceBusEnabled=False
+
+  sma.stm.services.subscriptionservice:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - EventBusConnection=${AZURE_SERVICE_BUS:-rabbitmq}
+      - EventBusUserName=${SERVICE_BUS_USERNAME}
+      - EventBusPassword=${SERVICE_BUS_PASSWORD}      
+      - AzureServiceBusEnabled=False
+
+  sma.stm.apigateway:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "8080:443"
+
+  sma.stm.messagesenderservice:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - EventBusConnection=${AZURE_SERVICE_BUS:-rabbitmq}
+      - EventBusUserName=${SERVICE_BUS_USERNAME}
+      - EventBusPassword=${SERVICE_BUS_PASSWORD}      
+      - AzureServiceBusEnabled=False

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Sma.Stm.Services.SubscriptionService.IntegrationEvents.Events;
 using Sma.Stm.EventBus.Abstractions;
+using Sma.Stm.EventBus.Events;
 
 namespace Sma.Stm.Services.SubscriptionService.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("/api/[controller]")]
     public class SubscriptionController : Controller
     {
         private readonly IEventBus _eventBus;

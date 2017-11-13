@@ -1,4 +1,4 @@
-﻿using Autofac.Extensions.DependencyInjection;
+﻿    using Autofac.Extensions.DependencyInjection;
 using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -15,8 +15,8 @@ using Sma.Stm.EventBus.Abstractions;
 using Autofac;
 using Sma.Stm.EventBus;
 using Sma.Stm.Services.AuthorizationServiceService.Models;
-//using Sma.Stm.Services.GenericMessageService.IntegrationEvents.EventHandling;
-//using Sma.Stm.Services.GenericMessageService.IntegrationEvents.Events;
+using Microsoft.EntityFrameworkCore;
+using Sma.Stm.Services.AuthorizationService.DataAccess;
 
 namespace Sma.Stm.Services.AuthorizationService
 {
@@ -32,8 +32,16 @@ namespace Sma.Stm.Services.AuthorizationService
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton(new DocumentDbRepository<AuthorizationList>("https://stmtest.documents.azure.com:443/", "2JCUjkUBgrjnCbmYR9mot5w6n6eWlVtlhqhTra8xWnAJFFEjixWzaQh4niUGM9GVnSVlViXVkJVl1a6lemosGA==", "StmTest", "AuthorizationList"));
+            services.AddSingleton(new DocumentDbRepository<AuthorizationsList>("https://stmtest.documents.azure.com:443/", "2JCUjkUBgrjnCbmYR9mot5w6n6eWlVtlhqhTra8xWnAJFFEjixWzaQh4niUGM9GVnSVlViXVkJVl1a6lemosGA==", "StmTest", "AuthorizationList"));
             services.AddMvc();
+
+            var sqlConnectionString = Configuration.GetConnectionString("DataAccessPostgreSqlProvider");
+            services.AddDbContext<AuthorizationDbContext>(options =>
+                    options.UseNpgsql(
+                        sqlConnectionString, 
+                        b => b.MigrationsAssembly("Sma.Stm.Services.AuthorizationService")
+                    )
+                );
 
             services.AddSwaggerGen(c =>
             {

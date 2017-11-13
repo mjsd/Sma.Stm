@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using System.Net;
 using Microsoft.AspNetCore.Server.Kestrel.Https;
 using System.Security.Cryptography.X509Certificates;
+using System.Security.Authentication;
 
 namespace Sma.Stm.ApiGateway
 {
@@ -24,15 +25,21 @@ namespace Sma.Stm.ApiGateway
             WebHost.CreateDefaultBuilder(args)
                 .UseIISIntegration()
                 .UseStartup<Startup>()
+                .ConfigureLogging((hostingContext, builder) =>
+                {
+                    builder.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+                    builder.AddConsole();
+                    builder.AddDebug();
+                })
                 .UseKestrel(options =>
                 {
-                    options.Listen(IPAddress.Loopback, 5000, listenOptions =>
+                    options.Listen(IPAddress.Any, 443, listenOptions =>
                     {
                         listenOptions.UseHttps(new HttpsConnectionAdapterOptions
                         {
-                            ServerCertificate = new X509Certificate2("cert.pfx", "StmVis123"),
-                            CheckCertificateRevocation = true,
-                            ClientCertificateMode = ClientCertificateMode.RequireCertificate,
+                            ServerCertificate = new X509Certificate2("cert.pfx", "4Gr8Access!"),
+                            //CheckCertificateRevocation = true,
+                            //ClientCertificateMode = ClientCertificateMode.RequireCertificate,
                         });
                     });
                 })

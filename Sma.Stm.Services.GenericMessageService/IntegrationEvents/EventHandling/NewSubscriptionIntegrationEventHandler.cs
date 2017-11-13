@@ -1,5 +1,5 @@
 ﻿using Sma.Stm.EventBus.Abstractions;
-using Sma.Stm.Services.GenericMessageService.IntegrationEvents.Events;
+using Sma.Stm.EventBus.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
