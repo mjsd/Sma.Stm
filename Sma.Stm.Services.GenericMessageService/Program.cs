@@ -7,6 +7,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System.Net;
 
 namespace Sma.Stm.Services.GenericMessageService
 {
@@ -19,6 +20,7 @@ namespace Sma.Stm.Services.GenericMessageService
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseIISIntegration()
                 .UseStartup<Startup>()
                 .ConfigureLogging((hostingContext, builder) =>
                 {
@@ -26,6 +28,11 @@ namespace Sma.Stm.Services.GenericMessageService
                     builder.AddConsole();
                     builder.AddDebug();
                 })
+                .UseKestrel(options =>
+                {
+                    options.Listen(IPAddress.Any, 80);
+                })
                 .Build();
+
     }
 }

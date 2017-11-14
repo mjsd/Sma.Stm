@@ -16,14 +16,13 @@ namespace Sma.Stm.Services.AuthorizationService.Migrations
                 name: "AuthorizationItem",
                 columns: table => new
                 {
-                    Id2 = table.Column<int>(type: "int4", nullable: false),
+                    Id = table.Column<int>(type: "int4", nullable: false),
                     DataId = table.Column<string>(type: "varchar(250)", maxLength: 250, nullable: false),
-                    Id = table.Column<string>(type: "text", nullable: true),
                     OrgId = table.Column<string>(type: "varchar(250)", maxLength: 250, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AuthorizationItem", x => x.Id2);
+                    table.PrimaryKey("PK_AuthorizationItem", x => x.Id);
                 });
         }
 

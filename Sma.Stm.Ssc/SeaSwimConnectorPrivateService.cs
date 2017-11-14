@@ -12,8 +12,11 @@ namespace Sma.Stm.Ssc
 {
     public class SeaSwimConnectorPrivateService
     {
-        public SeaSwimConnectorPrivateService()
+        private readonly IdentityRegistryService _identityRegistryService;
+
+        public SeaSwimConnectorPrivateService(IdentityRegistryService identityRegistryService)
         {
+            _identityRegistryService = identityRegistryService ?? throw new ArgumentNullException(nameof(identityRegistryService));
         }
 
         public virtual CallServiceResponseObj CallService(CallServiceRequestObj data)
@@ -60,8 +63,7 @@ namespace Sma.Stm.Ssc
             {
                 var url = "/orgs?page=0&size=1000";
 
-                var idRegService = new IdentityRegistryService();
-                var response = idRegService.MakeGenericCall(url, "GET");
+                var response = _identityRegistryService.MakeGenericCall(url, "GET");
                 if (response.HttpStatusCode == HttpStatusCode.OK
                     && !string.IsNullOrEmpty(response.Body)
                     && response.Body.Length > 35)

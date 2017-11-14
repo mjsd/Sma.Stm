@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Sma.Stm.Common.DocumentDb;
 using Sma.Stm.Services.GenericMessageService.Models;
 using System.Net;
 using Sma.Stm.Common.Xml;
@@ -16,6 +15,8 @@ using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Sma.Stm.EventBus.Events;
+using Sma.Stm.Services.GenericMessageService.DataAccess;
+using Microsoft.EntityFrameworkCore;
 
 namespace Sma.Stm.Services.GenericMessageService.Controllers
 {
@@ -23,19 +24,16 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
     public class PrivateController : MessageControllerBase
     {
         private readonly IEventBus _eventBus;
-        private readonly DocumentDbRepository<PublishedMessage> _publishedMessageRepository;
-        private readonly DocumentDbRepository<UploadedMessage> _uploadedMessageRepository;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly ILogger<PrivateController> _logger;
+        private readonly GenericMessageDbContext _dbContext;
 
-        public PrivateController(DocumentDbRepository<PublishedMessage> publishedMessageRepository,
-            DocumentDbRepository<UploadedMessage> uploadedMessageRepository,
+        public PrivateController(GenericMessageDbContext dbCOntext,
             IEventBus eventBus,
             IHostingEnvironment hostingEnvironment,
             ILogger<PrivateController> logger)
         {
-            _publishedMessageRepository = publishedMessageRepository ?? throw new ArgumentNullException(nameof(publishedMessageRepository));
-            _uploadedMessageRepository = uploadedMessageRepository ?? throw new ArgumentNullException(nameof(uploadedMessageRepository));
+            _dbContext = dbCOntext ?? throw new ArgumentNullException(nameof(dbCOntext));
             _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
             _hostingEnvironment = hostingEnvironment ?? throw new ArgumentNullException(nameof(hostingEnvironment));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -46,7 +44,7 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
         {
             try
             {
-                var items = await _uploadedMessageRepository.GetItemsAsync(x => x != null);
+                var items = await _dbContext.UploadedMessages.ToListAsync();
                 return Ok(items);
             }
             catch (Exception ex)
@@ -62,8 +60,23 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
 
             try
             {
-                var items = await _publishedMessageRepository.GetItemsAsync(x => x != null);
-                return Ok(items);
+                var items = await _dbContext.PublishedMessages.ToListAsync();
+
+                var response = new List<PublishedMessageContract>();
+                foreach (var item in items)
+                {
+                    response.Add(new PublishedMessageContract
+                    {
+                        Message = item.Content,
+                        MessageID = item.DataId,
+                        MessageLastUpdateTime = DateTime.UtcNow,
+                        MessageStatus = 7,
+                        MessageType = "RTZ",
+                        PublishTime = item.PublishTime
+                    });
+                }
+
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -72,11 +85,11 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
         }
 
         [HttpGet("PublishedMessage/{id}")]
-        public async Task<IActionResult> GetPublished(string id)
+        public async Task<IActionResult> GetPublished(string dataId)
         {
             try
             {
-                var item = await _publishedMessageRepository.GetItemAsync(id);
+                var item = await _dbContext.UploadedMessages.FirstOrDefaultAsync(x => x.DataId == dataId);
                 return Ok(item);
             }
             catch (Exception ex)
@@ -92,20 +105,24 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
             {
                 // Validate(message.Content, _hostingEnvironment);
 
-                var existing = await _publishedMessageRepository.GetItemAsync(message.Id);
+                var existing = await _dbContext.PublishedMessages.FirstOrDefaultAsync(x => x.DataId == message.DataId);
                 if (existing == null)
                 {
-                    await _publishedMessageRepository.CreateItemAsync(message);
+                    await _dbContext.AddAsync(message);
                 }
                 else
                 {
-                    await _publishedMessageRepository.UpdateItemAsync(message.Id, message);
+                    existing.Content = message.Content;
+                    existing.PublishTime = message.PublishTime;
+                    _dbContext.Update(existing);
                 }
+
+                _dbContext.SaveChanges();
 
                 var @event = new MessagePublishedIntegrationEvent
                 {
-                    DataId = message.Id,
-                    Content = message.Content.OuterXml
+                    DataId = message.DataId,
+                    Content = message.Content
                 };
                 _eventBus.Publish(@event);
 
@@ -117,12 +134,19 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
             }
         }
 
-        [HttpDelete("PublishedMessage/{id}")]
-        public async Task<IActionResult> DeletePublished(string id)
+        [HttpDelete("PublishedMessage/{dataId}")]
+        public async Task<IActionResult> DeletePublished(string dataId)
         {
             try
             {
-                await _publishedMessageRepository.DeleteItemAsync(id);
+                var existing = await _dbContext.PublishedMessages.FirstOrDefaultAsync(x => x.DataId == dataId);
+                if (existing != null)
+                {
+                    _dbContext.PublishedMessages.Remove(existing);
+                }
+
+                _dbContext.SaveChanges();
+
                 return Ok();
             }
             catch (Exception ex)

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2006
+VisualStudioVersion = 15.0.27004.2008
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{D16C69B8-07A3-41DE-9F4D-FABCC9379B1F}"
 EndProject
@@ -36,6 +36,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sma.Stm.EventBus", "Sma.Stm.EventBus\Sma.Stm.EventBus\Sma.Stm.EventBus.csproj", "{E27F0AAA-AA6E-4847-847D-4BB9C4E963EA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sma.Stm.EventBus.Events", "Sma.Stm.EventBus\Sma.Stm.EventBus.Events\Sma.Stm.EventBus.Events.csproj", "{B7708BA7-0721-4F50-A5D8-D17346DBBCF6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sma.Stm.Services.SeaSwimPrivateService", "..\Sma.Stm.Services.SeaSwimPrivateService\Sma.Stm.Services.SeaSwimPrivateService.csproj", "{35150728-74BB-4F34-A388-EDC7B2BEAEB4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -99,6 +101,10 @@ Global
 		{B7708BA7-0721-4F50-A5D8-D17346DBBCF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B7708BA7-0721-4F50-A5D8-D17346DBBCF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B7708BA7-0721-4F50-A5D8-D17346DBBCF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35150728-74BB-4F34-A388-EDC7B2BEAEB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35150728-74BB-4F34-A388-EDC7B2BEAEB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35150728-74BB-4F34-A388-EDC7B2BEAEB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35150728-74BB-4F34-A388-EDC7B2BEAEB4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -118,6 +124,7 @@ Global
 		{147D45A9-5843-48C0-9A7B-5BBF00128E89} = {D61AA399-2146-4EC3-9D2F-EA21A59B370C}
 		{E27F0AAA-AA6E-4847-847D-4BB9C4E963EA} = {A1832D19-14AC-43D5-9354-E44CD8F066BD}
 		{B7708BA7-0721-4F50-A5D8-D17346DBBCF6} = {A1832D19-14AC-43D5-9354-E44CD8F066BD}
+		{35150728-74BB-4F34-A388-EDC7B2BEAEB4} = {D61AA399-2146-4EC3-9D2F-EA21A59B370C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BCD3BAB5-4833-4D95-AB51-CE064919BAF9}

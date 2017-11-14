@@ -1,10 +1,47 @@
 ﻿{
   "Routes": {
+    // Public
     "/voyagePlans": {
       "Scheme": "http",
       "Host": "sma.stm.services.genericmessageservice",
       "PathBase": null,
       "Path": "/api/v1/Public/Message",
+      "QueryString": null
+    },
+    "/voyagePlans/subscription": {
+      "Scheme": "http",
+      "Host": "sma.stm.services.subscriptionservice",
+      "PathBase": null,
+      "Path": "/api/v1/Public/Subscription",
+      "QueryString": null
+    },
+    // Private
+    "/authorizeIdentities": {
+      "Scheme": "http",
+      "Host": "sma.stm.services.authorizationservice",
+      "PathBase": null,
+      "Path": "/api/v1/Authorization",
+      "QueryString": null
+    },
+    "/getPublishedMessages": {
+      "Scheme": "http",
+      "Host": "sma.stm.services.genericmessageservice",
+      "PathBase": null,
+      "Path": "/api/v1/Private/PublishedMessage",
+      "QueryString": null
+    },
+    "/publishMessage": {
+      "Scheme": "http",
+      "Host": "sma.stm.services.genericmessageservice",
+      "PathBase": null,
+      "Path": "/api/v1/Private/PublishedMessage",
+      "QueryString": null
+    },
+    "/findIdentities": {
+      "Scheme": "http",
+      "Host": "sma.stm.services.seaswimprivateservice",
+      "PathBase": null,
+      "Path": "/api/v1/scc/findIdentities",
       "QueryString": null
     }
   }

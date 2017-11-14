@@ -1,5 +1,4 @@
-﻿using Sma.Stm.Common.DocumentDb;
-using Sma.Stm.EventBus.Abstractions;
+﻿using Sma.Stm.EventBus.Abstractions;
 using Sma.Stm.EventBus.Events;
 using Sma.Stm.Services.SubscriptionService.Models;
 using System;
@@ -11,14 +10,11 @@ namespace Sma.Stm.Services.SubscriptionService.IntegrationEvents.EventHandling
 {
     public class MessagePublishedIntegrationEventHandler : IIntegrationEventHandler<MessagePublishedIntegrationEvent>
     {
-        private readonly DocumentDbRepository<SubscriptionList> _subscriptionRepository;
         private readonly IEventBus _eventBus;
 
-        public MessagePublishedIntegrationEventHandler(DocumentDbRepository<SubscriptionList> subscriptionRepository,
-            IEventBus eventBus)
+        public MessagePublishedIntegrationEventHandler(IEventBus eventBus)
         {
             _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
-            _subscriptionRepository = subscriptionRepository ?? throw new ArgumentNullException(nameof(subscriptionRepository));
         }
 
         public async Task Handle(MessagePublishedIntegrationEvent @event)

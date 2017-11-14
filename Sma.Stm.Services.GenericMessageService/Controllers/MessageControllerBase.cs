@@ -14,9 +14,9 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
 {
     public abstract class MessageControllerBase : Controller
     {
-        public static void Validate(XmlDocument message, IHostingEnvironment env)
+        public static void Validate(string message, IHostingEnvironment env)
         {
-            var schemaPath = Path.Combine(env.ContentRootPath, @"Schema\");
+            var schemaPath = Path.Combine(env.ContentRootPath, @"schema/");
             var shcemas = new List<XmlSchema>();
 
             foreach (var schemaFile in Directory.EnumerateFiles(schemaPath, "*.xsd"))
@@ -26,7 +26,7 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
             }
 
             var validator = new SchemaValidator(shcemas);
-            var errors = validator.ValidateXml(message.OuterXml);
+            var errors = validator.ValidateXml(message);
 
             if (errors != null)
             {

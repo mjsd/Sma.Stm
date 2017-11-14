@@ -15,9 +15,9 @@ namespace Sma.Stm.Services.AuthorizationService.DataAccess.EntityConfigurations
         {
             builder.ToTable("AuthorizationItem");
 
-            builder.HasKey(c => c.Id2);
+            builder.HasKey(c => c.Id);
 
-            builder.Property(c => c.Id2)
+            builder.Property(c => c.Id)
                .ForNpgsqlUseSequenceHiLo("AuthorizationItem_hilo")
                .IsRequired();
 

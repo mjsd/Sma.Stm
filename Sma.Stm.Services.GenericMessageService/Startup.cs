@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Sma.Stm.Common.DocumentDb;
 using Sma.Stm.Services.GenericMessageService.Models;
 using Swashbuckle.AspNetCore.Swagger;
 using Sma.Stm.EventBus.RabbitMQ;
@@ -19,6 +18,9 @@ using Sma.Stm.EventBus.Events;
 using Sma.Stm.Services.GenericMessageService.IntegrationEvents.EventHandling;
 using Microsoft.AspNetCore.Mvc;
 using Sma.Stm.Ssc;
+using Sma.Stm.Services.GenericMessageService.DataAccess;
+using Microsoft.EntityFrameworkCore;
+using Sma.Stm.Common.Web;
 
 namespace Sma.Stm.Services.GenericMessageService
 {
@@ -34,12 +36,19 @@ namespace Sma.Stm.Services.GenericMessageService
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton(new DocumentDbRepository<UploadedMessage>("https://stmtest.documents.azure.com:443/", "2JCUjkUBgrjnCbmYR9mot5w6n6eWlVtlhqhTra8xWnAJFFEjixWzaQh4niUGM9GVnSVlViXVkJVl1a6lemosGA==", "StmTest", "UploadedMessage"));
-            services.AddSingleton(new DocumentDbRepository<PublishedMessage>("https://stmtest.documents.azure.com:443/", "2JCUjkUBgrjnCbmYR9mot5w6n6eWlVtlhqhTra8xWnAJFFEjixWzaQh4niUGM9GVnSVlViXVkJVl1a6lemosGA==", "StmTest", "PublishedStmMessage"));
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
+            });
 
             services.AddMvc(options =>
             {
                 options.Filters.Add(typeof(SeaSwimActionFilter));
+                options.InputFormatters.Insert(0, new TextMediaTypeFormatter());
             });
 
             services.AddApiVersioning(option =>
@@ -51,9 +60,20 @@ namespace Sma.Stm.Services.GenericMessageService
 
             services.AddScoped<SeaSwimInstanceContextService>();
 
+            var sqlConnectionString = Configuration.GetConnectionString("DataAccessPostgreSqlProvider");
+            services.AddDbContext<GenericMessageDbContext>(options =>
+                    options.UseNpgsql(
+                        sqlConnectionString,
+                        b => b.MigrationsAssembly("Sma.Stm.Services.GenericMessageService")
+                    )
+                );
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+                c.DescribeAllEnumsAsStrings();
+                c.OperationFilter<Common.Swagger.RequestContentTypeOperationFilter>();
+                c.OperationFilter<Common.Swagger.ResponseContentTypeOperationFilter>();
             });
 
             if (Configuration.GetValue<bool>("AzureServiceBusEnabled"))

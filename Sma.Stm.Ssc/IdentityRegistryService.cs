@@ -1,4 +1,5 @@
-﻿using Sma.Stm.Common.Security;
+﻿using Microsoft.Extensions.Configuration;
+using Sma.Stm.Common.Security;
 using Sma.Stm.Common.Web;
 using System;
 using System.Collections.Generic;
@@ -16,10 +17,9 @@ namespace Sma.Stm.Ssc
         private const string IDREG_PATH_ORG_IDENTITIES = "/org/%s/services";
 
 
-        public IdentityRegistryService()
+        public IdentityRegistryService(IConfiguration configuration)
         {
-            //idRegistryBaseUrl = ConfigurationManager.AppSettings.Get("IdREgistryBaseUrl");
-            //rootCertificateTumbprint = ConfigurationManager.AppSettings.Get("RootCertificateTumbprint");
+            idRegistryBaseUrl = configuration.GetValue<string>("IdREgistryBaseUrl");
         }
 
         public bool IsCertificateValid(X509Certificate2 cert)

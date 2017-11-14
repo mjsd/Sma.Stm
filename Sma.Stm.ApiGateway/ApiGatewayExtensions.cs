@@ -60,7 +60,7 @@ namespace Sma.Stm.ApiGateway
             var requestMethod = request.Method;
             if (!HttpMethods.IsGet(requestMethod) &&
                 !HttpMethods.IsHead(requestMethod) &&
-                !HttpMethods.IsDelete(requestMethod) &&
+                // !HttpMethods.IsDelete(requestMethod) &&
                 !HttpMethods.IsTrace(requestMethod))
             {
                 var streamContent = new StreamContent(request.Body);

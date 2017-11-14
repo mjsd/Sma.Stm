@@ -14,7 +14,7 @@ namespace Sma.Stm.Common.Web
         public static bool UseHMACAuthentication { get; set; }
         public static string APIKey { get; set; }
         public static string APPId { get; set; }
-        private static X509Certificate2 ClientCertificate { get; set; }
+        public static X509Certificate2 ClientCertificate { get; set; }
 
         public static bool IgnoreServerCertificateErrors { get; set; }
 

@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Sma.Stm.Common.DocumentDb;
 using Sma.Stm.EventBus.Abstractions;
 using Sma.Stm.Services.AuthorizationServiceService.Models;
 using Sma.Stm.EventBus.Events;
 using Sma.Stm.Services.AuthorizationService.DataAccess;
 using Microsoft.EntityFrameworkCore;
+using Sma.Stm.Common.Swagger;
 
 namespace Sma.Stm.Services.AuthorizationService.Controllers
 {
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class AuthorizationController : Controller
     {
         private readonly IEventBus _eventBus;
@@ -46,31 +47,23 @@ namespace Sma.Stm.Services.AuthorizationService.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Get()
+        public async Task<IActionResult> Get([FromQuery]string dataId)
         {
             try
             {
-                var acl = await _dbCOntext.Authorizations.ToListAsync();
-                return Ok(acl);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, ex.Message);
-            }
-        }
+                var acl = await _dbCOntext.Authorizations.Where(x => x.DataId == dataId).ToListAsync();
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult> Get(int id)
-        {
-            try
-            {
-                var item = await _dbCOntext.Authorizations.Where(x => x.Id2 == id).ToListAsync();
-                if (item == null)
+                var response = new List<IdentityDescriptionObject>();
+                foreach (var item in acl)
                 {
-                    return NotFound();
+                    response.Add(new IdentityDescriptionObject
+                    {
+                        IdentityId = item.OrgId,
+                        IdentityName = ""
+                    });
                 }
 
-                return Ok(item);
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -79,29 +72,30 @@ namespace Sma.Stm.Services.AuthorizationService.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] AuthorizationItem item)
+        public async Task<IActionResult> Post([FromBody]List<IdentityDescriptionObject> items, [FromQuery]string dataId)
         {
-            if (item == null)
+            if (items == null)
             {
                 return BadRequest();
             }
 
             try
             {
-                var acl = await _dbCOntext.Authorizations.FirstOrDefaultAsync(x => x.Id2 == item.Id2);
-                if (acl == null)
+                foreach (var item in items)
                 {
-                    _dbCOntext.Authorizations.Add(item);
-                }
-                else
-                {
-                    acl.Id2 = item.Id2;
-                    acl.DataId = item.DataId;
-                    _dbCOntext.Authorizations.Update(acl);
-                }
+                    var acl = await _dbCOntext.Authorizations.FirstOrDefaultAsync(x =>
+                        x.DataId == dataId && x.OrgId == item.IdentityId);
 
-
-                await _dbCOntext.SaveChangesAsync();
+                    if (acl == null)
+                    {
+                        _dbCOntext.Authorizations.Add(new AuthorizationItem
+                        {
+                            DataId = dataId,
+                            OrgId = item.IdentityId
+                        });
+                        await _dbCOntext.SaveChangesAsync();
+                    }
+                }
                 return Ok();
             }
             catch (Exception ex)
@@ -111,15 +105,29 @@ namespace Sma.Stm.Services.AuthorizationService.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete([FromBody] AuthorizationItem item)
+        [SwaggerResponseContentType(responseType: "application/json", Exclusive = true)]
+        [SwaggerRequestContentType(requestType: "application/json", Exclusive = true)]
+        public async Task<IActionResult> Delete([FromBody]List<IdentityDescriptionObject> items, [FromQuery]string dataId)
         {
-            if (item == null)
+            if (items == null)
             {
                 return BadRequest();
             }
 
             try
             {
+                foreach (var item in items)
+                {
+                    var acl = await _dbCOntext.Authorizations.FirstOrDefaultAsync(x =>
+                        x.DataId == dataId && x.OrgId == item.IdentityId);
+
+                    if (acl != null)
+                    {
+                        _dbCOntext.Authorizations.Remove(acl);
+                        await _dbCOntext.SaveChangesAsync();
+                    }
+                }
+
                 return Ok();
             }
             catch (Exception ex)

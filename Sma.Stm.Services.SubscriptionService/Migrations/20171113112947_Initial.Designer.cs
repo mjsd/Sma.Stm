@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
-using Sma.Stm.Services.AuthorizationService.DataAccess;
+using Sma.Stm.Services.SubscriptionService.DataAccess;
 using System;
 
-namespace Sma.Stm.Services.AuthorizationService.Migrations
+namespace Sma.Stm.Services.SubscriptionService.Migrations
 {
-    [DbContext(typeof(AuthorizationDbContext))]
-    [Migration("20171110162823_Initial")]
+    [DbContext(typeof(SubscriptionDbContext))]
+    [Migration("20171113112947_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,28 +20,26 @@ namespace Sma.Stm.Services.AuthorizationService.Migrations
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
                 .HasAnnotation("ProductVersion", "2.0.0-rtm-26452")
-                .HasAnnotation("Relational:Sequence:.AuthorizationItem_hilo", "'AuthorizationItem_hilo', '', '1', '10', '', '', 'Int64', 'False'");
+                .HasAnnotation("Relational:Sequence:.SubscriptionItem_hilo", "'SubscriptionItem_hilo', '', '1', '10', '', '', 'Int64', 'False'");
 
-            modelBuilder.Entity("Sma.Stm.Services.AuthorizationServiceService.Models.AuthorizationItem", b =>
+            modelBuilder.Entity("Sma.Stm.Services.SubscriptionService.Models.SubscriptionItem", b =>
                 {
-                    b.Property<int>("Id2")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("Npgsql:HiLoSequenceName", "AuthorizationItem_hilo")
+                        .HasAnnotation("Npgsql:HiLoSequenceName", "SubscriptionItem_hilo")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SequenceHiLo);
 
                     b.Property<string>("DataId")
                         .IsRequired()
                         .HasMaxLength(250);
 
-                    b.Property<string>("Id");
-
                     b.Property<string>("OrgId")
                         .IsRequired()
                         .HasMaxLength(250);
 
-                    b.HasKey("Id2");
+                    b.HasKey("Id");
 
-                    b.ToTable("AuthorizationItem");
+                    b.ToTable("SubscriptionItem");
                 });
 #pragma warning restore 612, 618
         }

@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Sma.Stm.Common.DocumentDb;
 using Swashbuckle.AspNetCore.Swagger;
 using Sma.Stm.EventBus.RabbitMQ;
 using Sma.Stm.EventBus.ServiceBus;
@@ -17,6 +16,10 @@ using Sma.Stm.EventBus;
 using Sma.Stm.Services.SubscriptionService.IntegrationEvents.EventHandling;
 using Sma.Stm.Services.SubscriptionService.Models;
 using Sma.Stm.EventBus.Events;
+using Sma.Stm.Services.SubscriptionService.DataAccess;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
+using Sma.Stm.Ssc;
 
 namespace Sma.Stm.Services.SubscriptionService
 {
@@ -32,8 +35,28 @@ namespace Sma.Stm.Services.SubscriptionService
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton(new DocumentDbRepository<SubscriptionList>("https://stmtest.documents.azure.com:443/", "2JCUjkUBgrjnCbmYR9mot5w6n6eWlVtlhqhTra8xWnAJFFEjixWzaQh4niUGM9GVnSVlViXVkJVl1a6lemosGA==", "StmTest", "Subscription"));
-            services.AddMvc();
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(typeof(SeaSwimActionFilter));
+            });
+
+            services.AddApiVersioning(option =>
+            {
+                option.ReportApiVersions = true;
+                option.AssumeDefaultVersionWhenUnspecified = true;
+                option.DefaultApiVersion = new ApiVersion(1, 0);
+            });
+
+            services.AddScoped<SeaSwimInstanceContextService>();
+
+            var sqlConnectionString = Configuration.GetConnectionString("DataAccessPostgreSqlProvider");
+            services.AddDbContext<SubscriptionDbContext>(options =>
+                    options.UseNpgsql(
+                        sqlConnectionString,
+                        b => b.MigrationsAssembly("Sma.Stm.Services.SubscriptionService")
+                    )
+                );
+
 
             services.AddSwaggerGen(c =>
             {

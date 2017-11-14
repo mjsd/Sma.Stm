@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using Sma.Stm.Ssc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
@@ -32,7 +33,12 @@ namespace Sma.Stm.ApiGateway
                 throw new ArgumentNullException(nameof(context));
             }
 
-            var requestPath = context.Request.Path;
+            if (context.Request.Method == "OPTIONS")
+            {
+                return;
+            }
+
+            var requestPath = context.Request.Path.Value.Replace("//", "/");
 
             ApiGatewayOptionsItem target = null;
             if (_options.Routes != null
@@ -42,7 +48,8 @@ namespace Sma.Stm.ApiGateway
             }
             else
             {
-                await Task.FromResult(0);
+                context.Response.StatusCode = 404;
+                await context.Response.WriteAsync("The requested resource was not found");
                 return;
             }
 

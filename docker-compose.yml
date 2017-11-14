@@ -28,6 +28,12 @@ services:
       context: ./Sma.Stm.ApiGateway
       dockerfile: Dockerfile
 
+  sma.stm.services.seaswimprivateservice:
+    image: sma.stm.services.seaswimprivateservice
+    build:
+      context: ./../Sma.Stm.Services.SeaSwimPrivateService
+      dockerfile: Dockerfile
+
   sma.stm.messagesenderservice:
     image: sma.stm.messagesenderservice
     build:

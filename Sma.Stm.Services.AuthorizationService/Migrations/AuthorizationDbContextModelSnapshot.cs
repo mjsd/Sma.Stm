@@ -23,7 +23,7 @@ namespace Sma.Stm.Services.AuthorizationService.Migrations
 
             modelBuilder.Entity("Sma.Stm.Services.AuthorizationServiceService.Models.AuthorizationItem", b =>
                 {
-                    b.Property<int>("Id2")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("Npgsql:HiLoSequenceName", "AuthorizationItem_hilo")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SequenceHiLo);
@@ -32,13 +32,11 @@ namespace Sma.Stm.Services.AuthorizationService.Migrations
                         .IsRequired()
                         .HasMaxLength(250);
 
-                    b.Property<string>("Id");
-
                     b.Property<string>("OrgId")
                         .IsRequired()
                         .HasMaxLength(250);
 
-                    b.HasKey("Id2");
+                    b.HasKey("Id");
 
                     b.ToTable("AuthorizationItem");
                 });

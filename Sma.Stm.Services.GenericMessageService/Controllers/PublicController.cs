@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Sma.Stm.Common.DocumentDb;
 using Sma.Stm.Services.GenericMessageService.Models;
 using System.Net;
 using Sma.Stm.Common.Xml;
@@ -18,6 +17,10 @@ using Microsoft.Extensions.Logging;
 using Sma.Stm.Services.GenericMessageService.Services;
 using Sma.Stm.Ssc;
 using Sma.Stm.EventBus.Events;
+using Microsoft.EntityFrameworkCore;
+using Sma.Stm.Services.GenericMessageService.DataAccess;
+using Sma.Stm.Common.Swagger;
+using Microsoft.Extensions.Configuration;
 
 namespace Sma.Stm.Services.GenericMessageService.Controllers
 {
@@ -26,25 +29,25 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
     public class PublicController : MessageControllerBase
     {
         private readonly IEventBus _eventBus;
-        private readonly DocumentDbRepository<PublishedMessage> _publishedMessageRepository;
-        private readonly DocumentDbRepository<UploadedMessage> _uploadedMessageRepository;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly ILogger<PublicController> _logger;
+        private readonly IConfiguration _configuration;
         private readonly SeaSwimInstanceContextService _seaSwimInstanceContextService;
+        private readonly GenericMessageDbContext _dbCOntext;
 
-        public PublicController(DocumentDbRepository<PublishedMessage> publishedMessageRepository,
-            DocumentDbRepository<UploadedMessage> uploadedMessageRepository,
-            IEventBus eventBus,
+        public PublicController(IEventBus eventBus,
             IHostingEnvironment hostingEnvironment,
             ILogger<PublicController> logger,
-            SeaSwimInstanceContextService seaSwimInstanceContextService)
+            IConfiguration configuration,
+            SeaSwimInstanceContextService seaSwimInstanceContextService,
+            GenericMessageDbContext dbCOntext)
         {
-            _publishedMessageRepository = publishedMessageRepository ?? throw new ArgumentNullException(nameof(publishedMessageRepository));
-            _uploadedMessageRepository = uploadedMessageRepository ?? throw new ArgumentNullException(nameof(uploadedMessageRepository));
             _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
             _hostingEnvironment = hostingEnvironment ?? throw new ArgumentNullException(nameof(hostingEnvironment));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _seaSwimInstanceContextService = seaSwimInstanceContextService ?? throw new ArgumentNullException(nameof(seaSwimInstanceContextService));
+            _dbCOntext = dbCOntext ?? throw new ArgumentNullException(nameof(dbCOntext));
         }
 
         [HttpGet("Message")]
@@ -52,18 +55,25 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
         {
             try
             {
-                var items = await _publishedMessageRepository.GetItemsAsync(x => x != null);
-                var response = new List<PublishedMessage>();
+                var items = await _dbCOntext.PublishedMessages.ToListAsync();
+                var response = new GetVoyagePlanResponse
+                {
+                    LastInteractionTime = DateTime.UtcNow,
+                    VoyagePlans = new List<VoyagePlan>()
+                };
 
                 foreach (var item in items)
                 {
-                    if (AuthorizationService.CheckAuthentication(_seaSwimInstanceContextService.CallerOrgId, item.Id))
+                    if (AuthorizationService.CheckAuthentication(_seaSwimInstanceContextService.CallerOrgId, item.DataId))
                     {
-                        response.Add(item);
+                        response.VoyagePlans.Add(new VoyagePlan
+                        {
+                            Route = item.Content
+                        });
                     }
                 }
 
-                if (items.Count() > 0 && response.Count() == 0)
+                if (items.Count() > 0 && response.VoyagePlans.Count() == 0)
                     return Unauthorized();
 
                 return Ok(response);
@@ -74,17 +84,17 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
             }
         }
 
-        [HttpGet("Message/{id}")]
-        public async Task<IActionResult> Get(string id)
+        [HttpGet("Message/{dataId}")]
+        public async Task<IActionResult> Get(string dataId)
         {
             try
             {
-                if (!AuthorizationService.CheckAuthentication(_seaSwimInstanceContextService.CallerOrgId, id))
+                if (!AuthorizationService.CheckAuthentication(_seaSwimInstanceContextService.CallerOrgId, dataId))
                 {
                     return Unauthorized();
                 }
 
-                var item = await _publishedMessageRepository.GetItemAsync(id);
+                var item = await _dbCOntext.PublishedMessages.FirstOrDefaultAsync(x => x.DataId == dataId);
 
                 return Ok(item);
             }
@@ -95,13 +105,30 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
         }
 
         [HttpPost("Message")]
-        public async Task<IActionResult> Post([FromBody]UploadedMessage message)
+        [SwaggerResponseContentType(responseType: "application/json", Exclusive = true)]
+        [SwaggerRequestContentType(requestType: "text/xml", Exclusive = true)]
+        public async Task<IActionResult> Post([FromBody]string message)
         {
             try
             {
-                // Validate(message.Content, _hostingEnvironment);
+                Validate(message, _hostingEnvironment);
 
-                await _uploadedMessageRepository.CreateItemAsync(message);
+                var dataIdXPath = _configuration.GetValue<string>("DataIdXPath");
+                var parser = new XmlParser(message);
+                parser.SetNamespaces(_configuration.GetValue<string>("Namespaces"));
+
+                var uploadedMessage = new UploadedMessage
+                {
+                    Content = message,
+                    DataId = parser.GetValue(dataIdXPath),
+                    FromOrgId = _seaSwimInstanceContextService.CallerOrgId,
+                    FromServiceId = _seaSwimInstanceContextService.CallerServiceId,
+                    ReceiveTime = DateTime.UtcNow
+                };
+
+                await _dbCOntext.UploadedMessages.AddAsync(uploadedMessage);
+
+                _dbCOntext.SaveChanges();
 
                 var @event = new MessageUploadedIntegrationEvent
                 {

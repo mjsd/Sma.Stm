@@ -30,6 +30,15 @@ namespace Sma.Stm.ApiGateway
         {
             services.AddApiGateway();
             services.AddASeaSwimInstanceConfiguration();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
+            });
         }
 
         // This method gets called by the runtime. 
@@ -44,6 +53,7 @@ namespace Sma.Stm.ApiGateway
             var json = File.ReadAllText(Path.Combine(env.ContentRootPath, @"routeconfiguration.json"));
             var options = JsonConvert.DeserializeObject<ApiGatewayOptions>(json);
 
+            app.UseOptions();
             app.UseSeaSwimAuthentication(new object());
             app.RunApiGateway(options);
         }

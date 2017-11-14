@@ -1,11 +1,10 @@
-﻿    using Autofac.Extensions.DependencyInjection;
+﻿using Autofac.Extensions.DependencyInjection;
 using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Sma.Stm.Common.DocumentDb;
 using Swashbuckle.AspNetCore.Swagger;
 using Sma.Stm.EventBus.RabbitMQ;
 using Sma.Stm.EventBus.ServiceBus;
@@ -17,6 +16,12 @@ using Sma.Stm.EventBus;
 using Sma.Stm.Services.AuthorizationServiceService.Models;
 using Microsoft.EntityFrameworkCore;
 using Sma.Stm.Services.AuthorizationService.DataAccess;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Sma.Stm.Common.Web;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Cryptography.X509Certificates;
+using System.IO;
+using System.Reflection;
 
 namespace Sma.Stm.Services.AuthorizationService
 {
@@ -32,8 +37,14 @@ namespace Sma.Stm.Services.AuthorizationService
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton(new DocumentDbRepository<AuthorizationsList>("https://stmtest.documents.azure.com:443/", "2JCUjkUBgrjnCbmYR9mot5w6n6eWlVtlhqhTra8xWnAJFFEjixWzaQh4niUGM9GVnSVlViXVkJVl1a6lemosGA==", "StmTest", "AuthorizationList"));
             services.AddMvc();
+
+            services.AddApiVersioning(option =>
+            {
+                option.ReportApiVersions = true;
+                option.AssumeDefaultVersionWhenUnspecified = true;
+                option.DefaultApiVersion = new ApiVersion(1, 0);
+            });
 
             var sqlConnectionString = Configuration.GetConnectionString("DataAccessPostgreSqlProvider");
             services.AddDbContext<AuthorizationDbContext>(options =>
@@ -46,6 +57,9 @@ namespace Sma.Stm.Services.AuthorizationService
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+                c.DescribeAllEnumsAsStrings();
+                c.OperationFilter<Common.Swagger.RequestContentTypeOperationFilter>();
+                c.OperationFilter<Common.Swagger.ResponseContentTypeOperationFilter>();
             });
 
             if (Configuration.GetValue<bool>("AzureServiceBusEnabled"))
@@ -96,7 +110,6 @@ namespace Sma.Stm.Services.AuthorizationService
             var container = new ContainerBuilder();
             container.Populate(services);
             return new AutofacServiceProvider(container.Build());
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
