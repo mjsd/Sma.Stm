@@ -3,5 +3,4 @@ ARG source
 WORKDIR /app
 EXPOSE 80
 COPY ${source:-obj/Docker/publish} .
-
-ENTRYPOINT ["dotnet", "Sma.Stm.Services.AuthorizationService.dll"]
+ENTRYPOINT ["dotnet", "Sma.Stm.Services.SeaSwimPrivateService.dll"]

@@ -28,11 +28,19 @@ namespace Sma.Stm.Services.SubscriptionService.Migrations
                         .HasAnnotation("Npgsql:HiLoSequenceName", "SubscriptionItem_hilo")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SequenceHiLo);
 
+                    b.Property<string>("CallbackEndpoint")
+                        .IsRequired()
+                        .HasMaxLength(250);
+
                     b.Property<string>("DataId")
                         .IsRequired()
                         .HasMaxLength(250);
 
                     b.Property<string>("OrgId")
+                        .IsRequired()
+                        .HasMaxLength(250);
+
+                    b.Property<string>("ServiceId")
                         .IsRequired()
                         .HasMaxLength(250);
 

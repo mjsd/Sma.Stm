@@ -17,6 +17,7 @@ using Microsoft.Extensions.Logging;
 using Sma.Stm.EventBus.Events;
 using Sma.Stm.Services.GenericMessageService.DataAccess;
 using Microsoft.EntityFrameworkCore;
+using Sma.Stm.Common.Swagger;
 
 namespace Sma.Stm.Services.GenericMessageService.Controllers
 {
@@ -40,12 +41,44 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
         }
 
         [HttpGet("UploadedMessage")]
-        public async Task<IActionResult> GetUploaded()
+        [SwaggerResponseContentType(responseType: "application/json", Exclusive = true)]
+        public async Task<IActionResult> GetUploaded([FromQuery] int? limitQuery = null)
         {
             try
             {
-                var items = await _dbContext.UploadedMessages.ToListAsync();
-                return Ok(items);
+                var result = new MessageEnvelope
+                {
+                    Messages = new List<Message>()
+                };
+
+                var items = new List<UploadedMessage>();
+                if (limitQuery == null)
+                {
+                    items = await _dbContext.UploadedMessages
+                        .Where(x => !x.Fetched).OrderBy(x => x.ReceiveTime).ToListAsync();
+                }
+                else
+                {
+                    items = await _dbContext.UploadedMessages
+                        .Where(x => !x.Fetched).OrderBy(x => x.ReceiveTime).Take(limitQuery.Value).ToListAsync();
+                }
+
+                foreach(var item in items)
+                {
+                    result.Messages.Add(new Message
+                    {
+                        FromOrgId = item.FromOrgId,
+                        FromServiceId = item.FromServiceId,
+                        MessageType = "RTZ",
+                        ReceivedAt = item.ReceiveTime,
+                        StmMessage = new StmMessage
+                        {
+                            Message = item.Content
+                        },
+                    });
+                }
+
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -54,10 +87,9 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
         }
 
         [HttpGet("PublishedMessage")]
+        [SwaggerResponseContentType(responseType: "application/json", Exclusive = true)]
         public async Task<IActionResult> GetPublished()
         {
-            _logger.LogDebug("Get published messages");
-
             try
             {
                 var items = await _dbContext.PublishedMessages.ToListAsync();
@@ -84,36 +116,31 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
             }
         }
 
-        [HttpGet("PublishedMessage/{id}")]
-        public async Task<IActionResult> GetPublished(string dataId)
-        {
-            try
-            {
-                var item = await _dbContext.UploadedMessages.FirstOrDefaultAsync(x => x.DataId == dataId);
-                return Ok(item);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
-            }
-        }
-
         [HttpPost("PublishedMessage")]
-        public async Task<IActionResult> PostPublished([FromBody]PublishedMessage message)
+        [SwaggerResponseContentType(responseType: "application/json", Exclusive = true)]
+        [SwaggerRequestContentType(requestType: "text/xml", Exclusive = true)]
+        public async Task<IActionResult> PublishMessage([FromQuery]string dataId,
+            [FromQuery]string messageType,
+            [FromBody]string message)
         {
             try
             {
-                // Validate(message.Content, _hostingEnvironment);
+                Validate(message, _hostingEnvironment);
 
-                var existing = await _dbContext.PublishedMessages.FirstOrDefaultAsync(x => x.DataId == message.DataId);
+                var existing = await _dbContext.PublishedMessages.FirstOrDefaultAsync(x => x.DataId == dataId);
                 if (existing == null)
                 {
-                    await _dbContext.AddAsync(message);
+                    await _dbContext.PublishedMessages.AddAsync(new PublishedMessage
+                    {
+                        Content = message,
+                        DataId = dataId,
+                        PublishTime = DateTime.UtcNow
+                    });
                 }
                 else
                 {
-                    existing.Content = message.Content;
-                    existing.PublishTime = message.PublishTime;
+                    existing.Content = message;
+                    existing.PublishTime = DateTime.UtcNow;
                     _dbContext.Update(existing);
                 }
 
@@ -121,8 +148,8 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
 
                 var @event = new MessagePublishedIntegrationEvent
                 {
-                    DataId = message.DataId,
-                    Content = message.Content
+                    DataId = dataId,
+                    Content = message
                 };
                 _eventBus.Publish(@event);
 
@@ -134,8 +161,10 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
             }
         }
 
-        [HttpDelete("PublishedMessage/{dataId}")]
-        public async Task<IActionResult> DeletePublished(string dataId)
+        [HttpDelete("PublishedMessage")]
+        [SwaggerResponseContentType(responseType: "application/json", Exclusive = true)]
+        [SwaggerRequestContentType(requestType: "application/json", Exclusive = true)]
+        public async Task<IActionResult> DeletePublished([FromQuery]string dataId)
         {
             try
             {

@@ -27,7 +27,8 @@ namespace Sma.Stm.Services.AuthorizationService.Controllers
 
         [HttpGet]
         [Route("Check")]
-        public async Task<ActionResult> CheckAuthorization(string orgId, string dataId)
+        [SwaggerResponseContentType(responseType: "application/json", Exclusive = true)]
+        public async Task<IActionResult> CheckAuthorization(string orgId, string dataId)
         {
             try
             {
@@ -47,6 +48,7 @@ namespace Sma.Stm.Services.AuthorizationService.Controllers
         }
 
         [HttpGet]
+        [SwaggerResponseContentType(responseType: "application/json", Exclusive = true)]
         public async Task<IActionResult> Get([FromQuery]string dataId)
         {
             try
@@ -72,6 +74,8 @@ namespace Sma.Stm.Services.AuthorizationService.Controllers
         }
 
         [HttpPost]
+        [SwaggerResponseContentType(responseType: "application/json", Exclusive = true)]
+        [SwaggerRequestContentType(requestType: "application/json", Exclusive = true)]
         public async Task<IActionResult> Post([FromBody]List<IdentityDescriptionObject> items, [FromQuery]string dataId)
         {
             if (items == null)

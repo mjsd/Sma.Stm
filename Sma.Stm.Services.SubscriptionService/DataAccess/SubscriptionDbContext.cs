@@ -15,7 +15,7 @@ namespace Sma.Stm.Services.SubscriptionService.DataAccess
         {
         }
 
-        public DbSet<SubscriptionItem> Subscriptios { get; set; }
+        public DbSet<SubscriptionItem> Subscriptions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

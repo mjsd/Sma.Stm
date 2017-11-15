@@ -37,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sma.Stm.EventBus", "Sma.Stm
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sma.Stm.EventBus.Events", "Sma.Stm.EventBus\Sma.Stm.EventBus.Events\Sma.Stm.EventBus.Events.csproj", "{B7708BA7-0721-4F50-A5D8-D17346DBBCF6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sma.Stm.Services.SeaSwimPrivateService", "..\Sma.Stm.Services.SeaSwimPrivateService\Sma.Stm.Services.SeaSwimPrivateService.csproj", "{35150728-74BB-4F34-A388-EDC7B2BEAEB4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sma.Stm.Services.SeaSwimPrivateService", "Sma.Stm.Services.SeaSwimPrivateService\Sma.Stm.Services.SeaSwimPrivateService.csproj", "{35150728-74BB-4F34-A388-EDC7B2BEAEB4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

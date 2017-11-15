@@ -43,6 +43,13 @@
       "PathBase": null,
       "Path": "/api/v1/scc/findIdentities",
       "QueryString": null
+    },
+    "/subscription": {
+      "Scheme": "http",
+      "Host": "sma.stm.services.SubscriptionService",
+      "PathBase": null,
+      "Path": "/api/v1/Private/Subscription",
+      "QueryString": null
     }
   }
 }

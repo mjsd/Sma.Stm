@@ -36,6 +36,9 @@ namespace Sma.Stm.Services.GenericMessageService.DataAccess.EntityConfigurations
             builder.Property(c => c.ReceiveTime)
                 .IsRequired();
 
+            builder.Property(c => c.Fetched)
+                .HasDefaultValue(false);
+
             builder.Property(c => c.Content)
                 .HasColumnType("text");
 

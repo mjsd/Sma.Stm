@@ -17,8 +17,10 @@ namespace Sma.Stm.Services.SubscriptionService.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int4", nullable: false),
+                    CallbackEndpoint = table.Column<string>(type: "varchar(250)", maxLength: 250, nullable: false),
                     DataId = table.Column<string>(type: "varchar(250)", maxLength: 250, nullable: false),
-                    OrgId = table.Column<string>(type: "varchar(250)", maxLength: 250, nullable: false)
+                    OrgId = table.Column<string>(type: "varchar(250)", maxLength: 250, nullable: false),
+                    ServiceId = table.Column<string>(type: "varchar(250)", maxLength: 250, nullable: false)
                 },
                 constraints: table =>
                 {

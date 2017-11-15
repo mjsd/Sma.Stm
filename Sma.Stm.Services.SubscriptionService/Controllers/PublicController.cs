@@ -35,7 +35,7 @@ namespace Sma.Stm.Services.SubscriptionService.Controllers
         {
             try
             {
-                var items = await _dbContext.Subscriptios.Where(x => 
+                var items = await _dbContext.Subscriptions.Where(x => 
                     x.OrgId == _seaSwimInstanceContextService.CallerOrgId 
                     && x.CallbackEndpoint.ToLower() == callbackEndpoint.ToLower()).ToListAsync();
 
@@ -67,13 +67,13 @@ namespace Sma.Stm.Services.SubscriptionService.Controllers
             {
                 // TODO: check authorization
 
-                var items = await _dbContext.Subscriptios.Where(x => 
+                var items = await _dbContext.Subscriptions.Where(x => 
                     x.OrgId == _seaSwimInstanceContextService.CallerOrgId && x.DataId == uvid
                     && x.CallbackEndpoint.ToLower() == callbackEndpoint.ToLower()).ToListAsync();
 
                 if (items == null || items.Count() == 0)
                 {
-                    _dbContext.Subscriptios.Add(new Models.SubscriptionItem
+                    _dbContext.Subscriptions.Add(new Models.SubscriptionItem
                     {
                         DataId = uvid,
                         OrgId = _seaSwimInstanceContextService.CallerOrgId,
@@ -99,7 +99,7 @@ namespace Sma.Stm.Services.SubscriptionService.Controllers
         {
             try
             {
-                var item = await _dbContext.Subscriptios.FirstOrDefaultAsync(x =>
+                var item = await _dbContext.Subscriptions.FirstOrDefaultAsync(x =>
                     x.OrgId == _seaSwimInstanceContextService.CallerOrgId && x.DataId == uvid
                     && x.CallbackEndpoint.ToLower() == callbackEndpoint.ToLower());
 
@@ -108,7 +108,7 @@ namespace Sma.Stm.Services.SubscriptionService.Controllers
                     return NotFound();
                 }
 
-                _dbContext.Subscriptios.Remove(item);
+                _dbContext.Subscriptions.Remove(item);
                 _dbContext.SaveChanges();
 
                 return Ok(item);

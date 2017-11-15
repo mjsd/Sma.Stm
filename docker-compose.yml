@@ -9,39 +9,62 @@ services:
     depends_on:
       - rabbitmq
       - sma.stm.services.authorizationservice
+      - postgres
+    networks:
+      - stmnetwork
 
   sma.stm.services.authorizationservice:
     image: sma.stm.services.authorizationservice
     build:
       context: ./Sma.Stm.Services.AuthorizationService
       dockerfile: Dockerfile
+    depends_on:
+      - rabbitmq
+      - postgres
+    networks:
+      - stmnetwork
 
   sma.stm.services.subscriptionservice:
     image: sma.stm.services.subscriptionservice
     build:
       context: ./Sma.Stm.Services.SubscriptionService
       dockerfile: Dockerfile
+    depends_on:
+      - rabbitmq
+      - postgres
+    networks:
+      - stmnetwork
 
   sma.stm.apigateway:
     image: sma.stm.apigateway
     build:
       context: ./Sma.Stm.ApiGateway
       dockerfile: Dockerfile
+    networks:
+      - stmnetwork
 
   sma.stm.services.seaswimprivateservice:
     image: sma.stm.services.seaswimprivateservice
     build:
-      context: ./../Sma.Stm.Services.SeaSwimPrivateService
+      context: ./Sma.Stm.Services.SeaSwimPrivateService
       dockerfile: Dockerfile
+    networks:
+      - stmnetwork
 
   sma.stm.messagesenderservice:
     image: sma.stm.messagesenderservice
     build:
       context: ./Sma.Stm.MessageSenderService
       dockerfile: Dockerfile
+    depends_on:
+      - rabbitmq
+    networks:
+      - stmnetwork
 
   rabbitmq:
     image: rabbitmq:3-management
+    networks:
+      - stmnetwork
 
   postgres:
     image: postgres
@@ -50,3 +73,14 @@ services:
         POSTGRES_PASSWORD: "1234"
     ports:
       - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+       - stmnetwork
+
+volumes:
+  pgdata:
+
+networks:
+  stmnetwork:
+     driver: bridge

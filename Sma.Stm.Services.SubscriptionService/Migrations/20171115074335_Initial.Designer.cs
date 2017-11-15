@@ -11,7 +11,7 @@ using System;
 namespace Sma.Stm.Services.SubscriptionService.Migrations
 {
     [DbContext(typeof(SubscriptionDbContext))]
-    [Migration("20171113112947_Initial")]
+    [Migration("20171115074335_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,11 +29,19 @@ namespace Sma.Stm.Services.SubscriptionService.Migrations
                         .HasAnnotation("Npgsql:HiLoSequenceName", "SubscriptionItem_hilo")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SequenceHiLo);
 
+                    b.Property<string>("CallbackEndpoint")
+                        .IsRequired()
+                        .HasMaxLength(250);
+
                     b.Property<string>("DataId")
                         .IsRequired()
                         .HasMaxLength(250);
 
                     b.Property<string>("OrgId")
+                        .IsRequired()
+                        .HasMaxLength(250);
+
+                    b.Property<string>("ServiceId")
                         .IsRequired()
                         .HasMaxLength(250);
 
