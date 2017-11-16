@@ -18,6 +18,7 @@ using Sma.Stm.EventBus.Events;
 using Sma.Stm.Services.GenericMessageService.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Sma.Stm.Common.Swagger;
+using Newtonsoft.Json;
 
 namespace Sma.Stm.Services.GenericMessageService.Controllers
 {
@@ -40,7 +41,7 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        [HttpGet("UploadedMessage")]
+        [HttpGet("uploadedMessage")]
         [SwaggerResponseContentType(responseType: "application/json", Exclusive = true)]
         public async Task<IActionResult> GetUploaded([FromQuery] int? limitQuery = null)
         {
@@ -48,7 +49,9 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
             {
                 var result = new MessageEnvelope
                 {
-                    Messages = new List<Message>()
+                    Messages = new List<Message>(),
+                    NumberOfMessages = 0,
+                    RemainingNumberOfMessages = 0
                 };
 
                 var items = new List<UploadedMessage>();
@@ -67,16 +70,52 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
                 {
                     result.Messages.Add(new Message
                     {
+                        Id = item.DataId,
                         FromOrgId = item.FromOrgId,
                         FromServiceId = item.FromServiceId,
                         MessageType = "RTZ",
+                        CallbackEndpoint = "http://test.se",
+                        FromOrgName = "Missing",
                         ReceivedAt = item.ReceiveTime,
                         StmMessage = new StmMessage
                         {
-                            Message = item.Content
+                            Message = item.Content,
                         },
                     });
+
+                    item.Fetched = true;
+                    _dbContext.UploadedMessages.Update(item);
+
+                    if (item.SendAcknowledgement)
+                    {
+                        var ack = new DeliveryAck
+                        {
+                            AckResult = "Ok",
+                            FromId = "",
+                            FromName = "",
+                            Id = Guid.NewGuid().ToString(),
+                            ReferenceId = item.DataId,
+                            TimeOfDelivery = DateTime.UtcNow,
+                            ToId = "",
+                            ToName = ""
+                        };
+
+                        var newEvent = new SendMessageIntegrationEven
+                        {
+                            Body = JsonConvert.SerializeObject(ack),
+                            ContentType = "application/json; charset=utf-8",
+                            Url = new Uri("https://161.54.241.174:8080/acknowledgement"),
+                            HttpMethod = "POST",
+                            SenderOrgId = "",
+                            SenderServiceId = "",
+                            TargetServiceId = item.FromServiceId
+                        };
+
+                        _eventBus.Publish(newEvent);
+                    }
                 }
+
+                _dbContext.SaveChanges();
 
                 return Ok(result);
             }
@@ -86,7 +125,7 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
             }
         }
 
-        [HttpGet("PublishedMessage")]
+        [HttpGet("publishedMessage")]
         [SwaggerResponseContentType(responseType: "application/json", Exclusive = true)]
         public async Task<IActionResult> GetPublished()
         {
@@ -116,7 +155,7 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
             }
         }
 
-        [HttpPost("PublishedMessage")]
+        [HttpPost("publishedMessage")]
         [SwaggerResponseContentType(responseType: "application/json", Exclusive = true)]
         [SwaggerRequestContentType(requestType: "text/xml", Exclusive = true)]
         public async Task<IActionResult> PublishMessage([FromQuery]string dataId,
@@ -161,7 +200,7 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
             }
         }
 
-        [HttpDelete("PublishedMessage")]
+        [HttpDelete("publishedMessage")]
         [SwaggerResponseContentType(responseType: "application/json", Exclusive = true)]
         [SwaggerRequestContentType(requestType: "application/json", Exclusive = true)]
         public async Task<IActionResult> DeletePublished([FromQuery]string dataId)

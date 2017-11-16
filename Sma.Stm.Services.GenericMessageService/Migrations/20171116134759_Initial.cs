@@ -37,9 +37,11 @@ namespace Sma.Stm.Services.GenericMessageService.Migrations
                     Id = table.Column<int>(type: "int4", nullable: false),
                     Content = table.Column<string>(type: "text", nullable: true),
                     DataId = table.Column<string>(type: "varchar(250)", maxLength: 250, nullable: false),
+                    Fetched = table.Column<bool>(type: "bool", nullable: false, defaultValue: false),
                     FromOrgId = table.Column<string>(type: "varchar(250)", maxLength: 250, nullable: false),
                     FromServiceId = table.Column<string>(type: "varchar(250)", maxLength: 250, nullable: false),
-                    ReceiveTime = table.Column<DateTime>(type: "timestamp", nullable: false)
+                    ReceiveTime = table.Column<DateTime>(type: "timestamp", nullable: false),
+                    SendAcknowledgement = table.Column<bool>(type: "bool", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {

@@ -13,10 +13,13 @@ namespace Sma.Stm.Ssc
     public class SeaSwimConnectorPrivateService
     {
         private readonly IdentityRegistryService _identityRegistryService;
+        private readonly ServiceRegistryService _serviceRegistryService;
 
-        public SeaSwimConnectorPrivateService(IdentityRegistryService identityRegistryService)
+        public SeaSwimConnectorPrivateService(IdentityRegistryService identityRegistryService,
+            ServiceRegistryService serviceRegistryService)
         {
             _identityRegistryService = identityRegistryService ?? throw new ArgumentNullException(nameof(identityRegistryService));
+            _serviceRegistryService = serviceRegistryService ?? throw new ArgumentNullException(nameof(serviceRegistryService));
         }
 
         public virtual CallServiceResponseObj CallService(CallServiceRequestObj data)
@@ -94,7 +97,7 @@ namespace Sma.Stm.Ssc
 
             try
             {
-                var serviceRegService = new ServiceRegistryService();
+                var serviceRegService = _serviceRegistryService;
                 var response = serviceRegService.FindServices(request);
 
                 if (response.HttpStatusCode == HttpStatusCode.OK

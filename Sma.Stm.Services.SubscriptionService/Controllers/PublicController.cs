@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Net;
 using Sma.Stm.Ssc;
 using Sma.Stm.Services.SubscriptionService.Models;
+using Sma.Stm.Services.SubscriptionService.Services;
 
 namespace Sma.Stm.Services.SubscriptionService.Controllers
 {
@@ -30,7 +31,7 @@ namespace Sma.Stm.Services.SubscriptionService.Controllers
             _seaSwimInstanceContextService = seaSwimInstanceContextService ?? throw new ArgumentNullException(nameof(seaSwimInstanceContextService));
         }
 
-        [HttpGet("Subscription")]
+        [HttpGet("subscription")]
         public async Task<IActionResult> GetByEndpoint([FromQuery]string callbackEndpoint)
         {
             try
@@ -60,12 +61,15 @@ namespace Sma.Stm.Services.SubscriptionService.Controllers
             }
         }
 
-        [HttpPost("Subscription")]
+        [HttpPost("subscription")]
         public async Task<IActionResult> Post([FromQuery]string callbackEndpoint, [FromQuery]string uvid)
         {
             try
             {
-                // TODO: check authorization
+                if (!AuthorizationService.CheckAuthentication(_seaSwimInstanceContextService.CallerOrgId, uvid))
+                {
+                    return Unauthorized();
+                }
 
                 var items = await _dbContext.Subscriptions.Where(x => 
                     x.OrgId == _seaSwimInstanceContextService.CallerOrgId && x.DataId == uvid
@@ -77,8 +81,19 @@ namespace Sma.Stm.Services.SubscriptionService.Controllers
                     {
                         DataId = uvid,
                         OrgId = _seaSwimInstanceContextService.CallerOrgId,
+                        ServiceId = _seaSwimInstanceContextService.CallerServiceId,
                         CallbackEndpoint = callbackEndpoint
                     });
+
+                    var newEvent = new NewSubscriptionIntegrationEvent
+                    {
+                        CallbackEndpoint = callbackEndpoint,
+                        DataId = uvid,
+                        OrgId = _seaSwimInstanceContextService.CallerOrgId,
+                        ServiceId = _seaSwimInstanceContextService.CallerServiceId
+                    };
+
+                    _eventBus.Publish(newEvent);
                 }
                 else
                 {
@@ -94,7 +109,7 @@ namespace Sma.Stm.Services.SubscriptionService.Controllers
             }
         }
 
-        [HttpDelete("Subscription")]
+        [HttpDelete("subscription")]
         public async Task<IActionResult> Delete([FromQuery]string callbackEndpoint, [FromQuery]string uvid)
         {
             try

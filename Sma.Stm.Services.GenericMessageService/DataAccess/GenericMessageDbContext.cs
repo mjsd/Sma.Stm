@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Sma.Stm.Services.GenericMessageService.Models;
 using Sma.Stm.Services.GenericMessageService.DataAccess.EntityConfigurations;
 using Microsoft.EntityFrameworkCore.Design;
+using System.Threading;
 
 namespace Sma.Stm.Services.GenericMessageService.DataAccess
 {
@@ -25,7 +26,7 @@ namespace Sma.Stm.Services.GenericMessageService.DataAccess
         }
     }
 
-    public class AuthorizationDbContextDesignFactory : IDesignTimeDbContextFactory<GenericMessageDbContext>
+    public class GenericMessageDbContextDesignFactory : IDesignTimeDbContextFactory<GenericMessageDbContext>
     {
         public GenericMessageDbContext CreateDbContext(string[] args)
         {

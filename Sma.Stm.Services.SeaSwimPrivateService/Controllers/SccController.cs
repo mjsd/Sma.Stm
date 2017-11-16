@@ -7,6 +7,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using Sma.Stm.Ssc;
 using Newtonsoft.Json;
 using Sma.Stm.EventBus.Abstractions;
+using Sma.Stm.Common.Swagger;
 
 namespace Sma.Stm.Services.SeaSwimPrivateService.Controllers
 {
@@ -36,16 +37,20 @@ namespace Sma.Stm.Services.SeaSwimPrivateService.Controllers
         /// <response code="404">Unexpected error</response>
         [HttpPost]
         [Route("callService")]
-        [SwaggerOperation("CallServiceUsingPOST")]
+        [SwaggerResponseContentType(responseType: "application/json", Exclusive = true)]
+        [SwaggerRequestContentType(requestType: "application/json", Exclusive = true)]
         [SwaggerResponse(200, type: typeof(CallServiceResponseObj))]
-        public virtual IActionResult CallServiceUsingPOST([FromBody]CallServiceRequestObj request)
+        public virtual IActionResult CallService([FromBody]CallServiceRequestObj request)
         {
-            string exampleJson = null;
-
-            var example = exampleJson != null
-            ? JsonConvert.DeserializeObject<CallServiceResponseObj>(exampleJson)
-            : default(CallServiceResponseObj);
-            return new ObjectResult(example);
+            try
+            {
+                var response = _seaSwimConnectorPrivateService.CallService(request);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, ex.Message);
+            }
         }
 
         /// <summary>
@@ -60,9 +65,9 @@ namespace Sma.Stm.Services.SeaSwimPrivateService.Controllers
         /// <response code="404">Unexpected error</response>
         [HttpGet]
         [Route("findIdentities")]
-        [SwaggerOperation("FindIdentities")]
         [SwaggerResponse(200, type: typeof(FindIdentitiesResponseObj))]
-        public virtual IActionResult FindIdentitiesUsing()
+        [SwaggerResponseContentType(responseType: "application/json", Exclusive = true)]
+        public virtual IActionResult FindIdentities()
         {
             try
             {
@@ -87,16 +92,20 @@ namespace Sma.Stm.Services.SeaSwimPrivateService.Controllers
         /// <response code="404">Unexpected error</response>
         [HttpPost]
         [Route("findServices")]
-        [SwaggerOperation("FindServices")]
         [SwaggerResponse(200, type: typeof(FindServicesResponseObj))]
+        [SwaggerResponseContentType(responseType: "application/json", Exclusive = true)]
+        [SwaggerRequestContentType(requestType: "application/json", Exclusive = true)]
         public virtual IActionResult FindServices([FromBody]FindServicesRequestObj request)
         {
-            string exampleJson = null;
-
-            var example = exampleJson != null
-            ? JsonConvert.DeserializeObject<FindServicesResponseObj>(exampleJson)
-            : default(FindServicesResponseObj);
-            return new ObjectResult(example);
+            try
+            {
+                var response = _seaSwimConnectorPrivateService.FindServices(request);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, ex.Message);
+            }
         }
     }
 }

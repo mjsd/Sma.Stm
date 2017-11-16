@@ -15,5 +15,6 @@ namespace Sma.Stm.Services.GenericMessageService.Models
         public string FromServiceId { get; set; }
         public DateTime ReceiveTime { get; set; }
         public bool Fetched { get; set; }
+        public bool SendAcknowledgement { get; set; }
     }
 }

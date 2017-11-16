@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace Sma.Stm.Services.GenericMessageService.Services
+namespace Sma.Stm.Services.SubscriptionService.Services
 {
     public class AuthorizationService
     {

@@ -5,14 +5,21 @@
       "Scheme": "http",
       "Host": "sma.stm.services.genericmessageservice",
       "PathBase": null,
-      "Path": "/api/v1/Public/Message",
+      "Path": "/api/v1/public/message",
       "QueryString": null
     },
     "/voyagePlans/subscription": {
       "Scheme": "http",
       "Host": "sma.stm.services.subscriptionservice",
       "PathBase": null,
-      "Path": "/api/v1/Public/Subscription",
+      "Path": "/api/v1/public/subscription",
+      "QueryString": null
+    },
+    "/acknowledgement": {
+      "Scheme": "http",
+      "Host": "sma.stm.services.genericmessageservice",
+      "PathBase": null,
+      "Path": "/api/v1/public/message/acknowledgement",
       "QueryString": null
     },
     // Private
@@ -20,21 +27,35 @@
       "Scheme": "http",
       "Host": "sma.stm.services.authorizationservice",
       "PathBase": null,
-      "Path": "/api/v1/Authorization",
+      "Path": "/api/v1/authorization",
       "QueryString": null
     },
     "/getPublishedMessages": {
       "Scheme": "http",
       "Host": "sma.stm.services.genericmessageservice",
       "PathBase": null,
-      "Path": "/api/v1/Private/PublishedMessage",
+      "Path": "/api/v1/private/publishedMessage",
       "QueryString": null
     },
     "/publishMessage": {
       "Scheme": "http",
       "Host": "sma.stm.services.genericmessageservice",
       "PathBase": null,
-      "Path": "/api/v1/Private/PublishedMessage",
+      "Path": "/api/v1/private/publishedMessage",
+      "QueryString": null
+    },
+    "/getMessage": {
+      "Scheme": "http",
+      "Host": "sma.stm.services.genericmessageservice",
+      "PathBase": null,
+      "Path": "/api/v1/private/uploadedMessage",
+      "QueryString": null
+    },
+    "/subscription": {
+      "Scheme": "http",
+      "Host": "sma.stm.services.SubscriptionService",
+      "PathBase": null,
+      "Path": "/api/v1/private/subscription",
       "QueryString": null
     },
     "/findIdentities": {
@@ -44,11 +65,18 @@
       "Path": "/api/v1/scc/findIdentities",
       "QueryString": null
     },
-    "/subscription": {
+    "/findServices": {
       "Scheme": "http",
-      "Host": "sma.stm.services.SubscriptionService",
+      "Host": "sma.stm.services.seaswimprivateservice",
       "PathBase": null,
-      "Path": "/api/v1/Private/Subscription",
+      "Path": "/api/v1/scc/findServices",
+      "QueryString": null
+    },
+    "/callService": {
+      "Scheme": "http",
+      "Host": "sma.stm.services.seaswimprivateservice",
+      "PathBase": null,
+      "Path": "/api/v1/scc/callService",
       "QueryString": null
     }
   }

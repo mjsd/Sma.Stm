@@ -16,7 +16,6 @@ namespace Sma.Stm.Ssc
 
         private const string IDREG_PATH_ORG_IDENTITIES = "/org/%s/services";
 
-
         public IdentityRegistryService(IConfiguration configuration)
         {
             idRegistryBaseUrl = configuration.GetValue<string>("IdREgistryBaseUrl");

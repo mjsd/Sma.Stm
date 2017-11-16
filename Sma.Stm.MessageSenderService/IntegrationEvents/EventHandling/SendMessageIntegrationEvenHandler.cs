@@ -13,7 +13,6 @@ namespace Sma.Stm.Services.GenericMessageService.IntegrationEvents.EventHandling
     {
         public SendMessageIntegrationEvenHandler()
         {
-
         }
 
         public async Task Handle(SendMessageIntegrationEven @event)

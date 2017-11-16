@@ -11,6 +11,7 @@ using System.Net;
 using Sma.Stm.Ssc;
 using Sma.Stm.Services.SubscriptionService.Models;
 using Sma.Stm.Common.Swagger;
+using Sma.Stm.Services.SubscriptionService.Services;
 
 namespace Sma.Stm.Services.SubscriptionService.Controllers
 {
@@ -28,7 +29,7 @@ namespace Sma.Stm.Services.SubscriptionService.Controllers
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        [HttpGet("Subscription")]
+        [HttpGet("subscription")]
         [SwaggerResponseContentType(responseType: "application/json", Exclusive = true)]
         public async Task<IActionResult> Get([FromQuery]string dataId)
         {
@@ -55,7 +56,7 @@ namespace Sma.Stm.Services.SubscriptionService.Controllers
             }
         }
 
-        [HttpPost("Subscription")]
+        [HttpPost("subscription")]
         [SwaggerResponseContentType(responseType: "application/json", Exclusive = true)]
         [SwaggerRequestContentType(requestType: "application/json", Exclusive = true)]
         public async Task<IActionResult> Post([FromBody]List<SubscriptionObject> items, [FromQuery]string dataId)
@@ -69,19 +70,32 @@ namespace Sma.Stm.Services.SubscriptionService.Controllers
             {
                 foreach (var item in items)
                 {
-                    var acl = await _dbContext.Subscriptions.FirstOrDefaultAsync(x =>
-                        x.DataId == dataId && x.OrgId == item.IdentityId);
 
-                    if (acl == null)
+                    var subscription = await _dbContext.Subscriptions.FirstOrDefaultAsync(x =>
+                        x.DataId == dataId && x.OrgId == item.IdentityId && x.CallbackEndpoint == item.EndpointURL.ToString());
+
+                    if (subscription == null && AuthorizationService.CheckAuthentication(item.IdentityId, dataId))
                     {
-                        _dbContext.Subscriptions.Add(new SubscriptionItem
+                        subscription = new SubscriptionItem
                         {
                             DataId = dataId,
                             OrgId = item.IdentityId,
                             ServiceId = "missing",
                             CallbackEndpoint = item.EndpointURL.ToString()
-                        });
+                        };
+
+                        _dbContext.Subscriptions.Add(subscription);
                         await _dbContext.SaveChangesAsync();
+
+                        var newEvent = new NewSubscriptionIntegrationEvent
+                        {
+                            CallbackEndpoint = subscription.CallbackEndpoint,
+                            DataId = subscription.DataId,
+                            OrgId = subscription.OrgId,
+                            ServiceId = subscription.ServiceId
+                        };
+
+                        _eventBus.Publish(newEvent);
                     }
                 }
                 return Ok();
@@ -92,7 +106,7 @@ namespace Sma.Stm.Services.SubscriptionService.Controllers
             }
         }
 
-        [HttpDelete("Subscription")]
+        [HttpDelete("subscription")]
         [SwaggerResponseContentType(responseType: "application/json", Exclusive = true)]
         [SwaggerRequestContentType(requestType: "application/json", Exclusive = true)]
         public async Task<IActionResult> Delete([FromBody]List<SubscriptionObject> items, [FromQuery]string dataId)

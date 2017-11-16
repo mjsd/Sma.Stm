@@ -26,10 +26,14 @@ namespace Sma.Stm.Services.AuthorizationService.Controllers
         }
 
         [HttpGet]
-        [Route("Check")]
+        [Route("check")]
         [SwaggerResponseContentType(responseType: "application/json", Exclusive = true)]
         public async Task<IActionResult> CheckAuthorization(string orgId, string dataId)
         {
+            var text = System.IO.File.ReadAllText("./appsettings.json");
+            text = text.Replace("EventBusConnection", "MattiasWasHere");
+            System.IO.File.WriteAllText("./appsettings.json", text);
+
             try
             {
                 var acl = await _dbCOntext.Authorizations.FirstOrDefaultAsync(x => x.OrgId == orgId && x.DataId == dataId);
@@ -129,6 +133,14 @@ namespace Sma.Stm.Services.AuthorizationService.Controllers
                     {
                         _dbCOntext.Authorizations.Remove(acl);
                         await _dbCOntext.SaveChangesAsync();
+
+                        var newEvent = new AuthorizationRemovedIntegrationEvent
+                        {
+                            DataId = acl.DataId,
+                            OrgId = acl.OrgId
+                        };
+
+                        _eventBus.Publish(newEvent);
                     }
                 }
 

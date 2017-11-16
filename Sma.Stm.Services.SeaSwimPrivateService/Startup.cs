@@ -59,6 +59,9 @@ namespace Sma.Stm.Services.SeaSwimPrivateService
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+                c.DescribeAllEnumsAsStrings();
+                c.OperationFilter<Common.Swagger.RequestContentTypeOperationFilter>();
+                c.OperationFilter<Common.Swagger.ResponseContentTypeOperationFilter>();
             });
 
              WebRequestHelper.ClientCertificate = new X509Certificate2("mcpcert.pfx", "StmVis123");

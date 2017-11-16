@@ -50,7 +50,7 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
             _dbCOntext = dbCOntext ?? throw new ArgumentNullException(nameof(dbCOntext));
         }
 
-        [HttpGet("Message")]
+        [HttpGet("message")]
         public async Task<IActionResult> Get()
         {
             try
@@ -84,7 +84,7 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
             }
         }
 
-        [HttpGet("Message/{dataId}")]
+        [HttpGet("message/{dataId}")]
         public async Task<IActionResult> Get(string dataId)
         {
             try
@@ -104,10 +104,10 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
             }
         }
 
-        [HttpPost("Message")]
+        [HttpPost("message")]
         [SwaggerResponseContentType(responseType: "application/json", Exclusive = true)]
         [SwaggerRequestContentType(requestType: "text/xml", Exclusive = true)]
-        public async Task<IActionResult> Post([FromBody]string message)
+        public async Task<IActionResult> Post([FromBody]string message, [FromQuery]string deliveryAckEndPoint = null)
         {
             try
             {
@@ -123,12 +123,14 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
                     DataId = parser.GetValue(dataIdXPath),
                     FromOrgId = _seaSwimInstanceContextService.CallerOrgId,
                     FromServiceId = _seaSwimInstanceContextService.CallerServiceId,
-                    ReceiveTime = DateTime.UtcNow
+                    ReceiveTime = DateTime.UtcNow,
+                    SendAcknowledgement = deliveryAckEndPoint == null ? false : true,
+                    Fetched = false
                 };
 
                 await _dbCOntext.UploadedMessages.AddAsync(uploadedMessage);
 
-                _dbCOntext.SaveChanges();
+                await _dbCOntext.SaveChangesAsync();
 
                 var @event = new MessageUploadedIntegrationEvent
                 {
@@ -141,6 +143,15 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
             {
                 return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
+        }
+
+        [HttpPost]
+        [Route("message/acknowledgement")]
+        [SwaggerResponseContentType(responseType: "application/json", Exclusive = true)]
+        [SwaggerRequestContentType(requestType: "application/json", Exclusive = true)]
+        public async virtual Task<IActionResult> Acknowledgement([FromBody]DeliveryAck deliveryAck)
+        {
+            return Ok();
         }
     }
 }

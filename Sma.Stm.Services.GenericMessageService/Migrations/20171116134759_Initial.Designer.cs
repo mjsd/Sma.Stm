@@ -11,7 +11,7 @@ using System;
 namespace Sma.Stm.Services.GenericMessageService.Migrations
 {
     [DbContext(typeof(GenericMessageDbContext))]
-    [Migration("20171113124059_Initial")]
+    [Migration("20171116134759_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -58,6 +58,10 @@ namespace Sma.Stm.Services.GenericMessageService.Migrations
                         .IsRequired()
                         .HasMaxLength(250);
 
+                    b.Property<bool>("Fetched")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(false);
+
                     b.Property<string>("FromOrgId")
                         .IsRequired()
                         .HasMaxLength(250);
@@ -67,6 +71,10 @@ namespace Sma.Stm.Services.GenericMessageService.Migrations
                         .HasMaxLength(250);
 
                     b.Property<DateTime>("ReceiveTime");
+
+                    b.Property<bool>("SendAcknowledgement")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
