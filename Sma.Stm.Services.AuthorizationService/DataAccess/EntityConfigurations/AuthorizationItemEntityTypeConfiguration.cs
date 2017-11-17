@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Sma.Stm.Services.AuthorizationServiceService.Models;
+using Sma.Stm.Services.AuthorizationService.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

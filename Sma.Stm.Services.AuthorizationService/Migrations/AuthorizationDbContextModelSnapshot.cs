@@ -21,7 +21,7 @@ namespace Sma.Stm.Services.AuthorizationService.Migrations
                 .HasAnnotation("ProductVersion", "2.0.0-rtm-26452")
                 .HasAnnotation("Relational:Sequence:.AuthorizationItem_hilo", "'AuthorizationItem_hilo', '', '1', '10', '', '', 'Int64', 'False'");
 
-            modelBuilder.Entity("Sma.Stm.Services.AuthorizationServiceService.Models.AuthorizationItem", b =>
+            modelBuilder.Entity("Sma.Stm.Services.AuthorizationService.Models.AuthorizationItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()

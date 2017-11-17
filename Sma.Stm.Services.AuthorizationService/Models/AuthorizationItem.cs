@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Sma.Stm.Services.AuthorizationServiceService.Models
+namespace Sma.Stm.Services.AuthorizationService.Models
 {
     public class AuthorizationItem
     {

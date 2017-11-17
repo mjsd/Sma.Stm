@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Sma.Stm.Services.AuthorizationServiceService.Models;
+using Sma.Stm.Services.AuthorizationService.Models;
 using Sma.Stm.Services.AuthorizationService.DataAccess.EntityConfigurations;
 using Microsoft.EntityFrameworkCore.Design;
 

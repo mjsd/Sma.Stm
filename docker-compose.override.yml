@@ -31,13 +31,13 @@ services:
     ports:
       - "5003:80"
 
-  sma.stm.apigateway:
+  sma.stm.ssc.apigateway:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
       - "8080:443"
 
-  sma.stm.services.seaswimprivateservice:
+  sma.stm.ssc.services.private:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - EventBusConnection=${AZURE_SERVICE_BUS:-rabbitmq}
@@ -46,6 +46,16 @@ services:
       - AzureServiceBusEnabled=False
     ports:
       - "5004:80"
+
+  sma.stm.services.notificationservice:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - EventBusConnection=${AZURE_SERVICE_BUS:-rabbitmq}
+      - EventBusUserName=${SERVICE_BUS_USERNAME}
+      - EventBusPassword=${SERVICE_BUS_PASSWORD}      
+      - AzureServiceBusEnabled=False
+    ports:
+      - "5005:80"
 
   sma.stm.messagesenderservice:
     environment:

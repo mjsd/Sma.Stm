@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
-namespace Sma.Stm.Services.AuthorizationServiceService.Models
+namespace Sma.Stm.Services.AuthorizationService.Models
 {
     /// <summary>
     /// 

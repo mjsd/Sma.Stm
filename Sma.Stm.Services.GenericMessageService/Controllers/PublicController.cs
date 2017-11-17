@@ -33,7 +33,7 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
         private readonly ILogger<PublicController> _logger;
         private readonly IConfiguration _configuration;
         private readonly SeaSwimInstanceContextService _seaSwimInstanceContextService;
-        private readonly GenericMessageDbContext _dbCOntext;
+        private readonly GenericMessageDbContext _dbContext;
 
         public PublicController(IEventBus eventBus,
             IHostingEnvironment hostingEnvironment,
@@ -47,7 +47,7 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _seaSwimInstanceContextService = seaSwimInstanceContextService ?? throw new ArgumentNullException(nameof(seaSwimInstanceContextService));
-            _dbCOntext = dbCOntext ?? throw new ArgumentNullException(nameof(dbCOntext));
+            _dbContext = dbCOntext ?? throw new ArgumentNullException(nameof(dbCOntext));
         }
 
         [HttpGet("message")]
@@ -55,7 +55,7 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
         {
             try
             {
-                var items = await _dbCOntext.PublishedMessages.ToListAsync();
+                var items = await _dbContext.PublishedMessages.ToListAsync();
                 var response = new GetVoyagePlanResponse
                 {
                     LastInteractionTime = DateTime.UtcNow,
@@ -94,7 +94,7 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
                     return Unauthorized();
                 }
 
-                var item = await _dbCOntext.PublishedMessages.FirstOrDefaultAsync(x => x.DataId == dataId);
+                var item = await _dbContext.PublishedMessages.FirstOrDefaultAsync(x => x.DataId == dataId);
 
                 return Ok(item);
             }
@@ -128,9 +128,9 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
                     Fetched = false
                 };
 
-                await _dbCOntext.UploadedMessages.AddAsync(uploadedMessage);
+                await _dbContext.UploadedMessages.AddAsync(uploadedMessage);
 
-                await _dbCOntext.SaveChangesAsync();
+                await _dbContext.SaveChangesAsync();
 
                 var @event = new MessageUploadedIntegrationEvent
                 {
@@ -151,6 +151,19 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
         [SwaggerRequestContentType(requestType: "application/json", Exclusive = true)]
         public async virtual Task<IActionResult> Acknowledgement([FromBody]DeliveryAck deliveryAck)
         {
+            var @event = new NotificationIntegrationEvent
+            {
+                FromOrgId = _seaSwimInstanceContextService.CallerOrgId,
+                FromOrgName = "",
+                FromServiceId = _seaSwimInstanceContextService.CallerServiceId,
+                NotificationCreatedAt = DateTime.UtcNow,
+                NotificationType = EnumNotificationType.ACKNOWLEDGEMENT_RECEIVED,
+                Subject = "Acknowledgement",
+                NotificationSource = EnumNotificationSource.VIS,
+                Body = string.Format("Acknowledgement of message delivery for message with id {0} recieved from {1}, {2}", deliveryAck.ReferenceId, deliveryAck.FromName, deliveryAck.FromId)
+            };
+            _eventBus.Publish(@event);
+
             return Ok();
         }
     }

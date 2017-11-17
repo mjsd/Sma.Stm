@@ -39,7 +39,7 @@ namespace Sma.Stm.Services.SubscriptionService.IntegrationEvents.EventHandling
                     _eventBus.Publish(newEvent);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }

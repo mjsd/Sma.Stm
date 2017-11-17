@@ -1,29 +1,29 @@
-﻿using Autofac.Extensions.DependencyInjection;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Swashbuckle.AspNetCore.Swagger;
-using Sma.Stm.EventBus.RabbitMQ;
-using Sma.Stm.EventBus.ServiceBus;
-using RabbitMQ.Client;
-using Microsoft.Azure.ServiceBus;
-using Sma.Stm.EventBus.Abstractions;
-using Autofac;
-using Sma.Stm.EventBus;
-using Sma.Stm.Services.AuthorizationService.Models;
-using Microsoft.EntityFrameworkCore;
-using Sma.Stm.Services.AuthorizationService.DataAccess;
-using Microsoft.AspNetCore.Mvc.Formatters;
-using Sma.Stm.Common.Web;
+using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Cryptography.X509Certificates;
-using System.IO;
-using System.Reflection;
+using Microsoft.EntityFrameworkCore;
+using Autofac.Extensions.DependencyInjection;
+using Autofac;
+using Sma.Stm.EventBus.RabbitMQ;
+using RabbitMQ.Client;
+using Sma.Stm.EventBus.ServiceBus;
+using Microsoft.Azure.ServiceBus;
+using Swashbuckle.AspNetCore.Swagger;
+using Sma.Stm.EventBus;
+using Sma.Stm.EventBus.Abstractions;
+using Sma.Stm.Services.AuthorizationService.DataAccess;
+using Sma.Stm.Services.GenericMessageService.IntegrationEvents.EventHandling;
+using Sma.Stm.EventBus.Events;
 
-namespace Sma.Stm.Services.AuthorizationService
+namespace Sma.Stm.Services.NotificationService
 {
     public class Startup
     {
@@ -47,10 +47,10 @@ namespace Sma.Stm.Services.AuthorizationService
             });
 
             var sqlConnectionString = Configuration.GetConnectionString("DataAccessPostgreSqlProvider");
-            services.AddDbContext<AuthorizationDbContext>(options =>
+            services.AddDbContext<NotificationDbContext>(options =>
                     options.UseNpgsql(
-                        sqlConnectionString, 
-                        b => b.MigrationsAssembly("Sma.Stm.Services.AuthorizationService")
+                        sqlConnectionString,
+                        b => b.MigrationsAssembly("Sma.Stm.Services.NotificationService")
                     )
                 );
 
@@ -169,13 +169,13 @@ namespace Sma.Stm.Services.AuthorizationService
             }
 
             services.AddSingleton<IEventBusSubscriptionsManager, InMemoryEventBusSubscriptionsManager>();
-            //services.AddTransient<NewSubscriptionIntegrationEventHandler>();
+            services.AddTransient<NotificationIntegrationEventHandler>();
         }
 
         private void ConfigureEventBus(IApplicationBuilder app)
         {
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
-            //eventBus.Subscribe<NewSubscriptionIntegrationEvent, NewSubscriptionIntegrationEventHandler>();
+            eventBus.Subscribe<NotificationIntegrationEvent, NotificationIntegrationEventHandler>();
         }
     }
 }

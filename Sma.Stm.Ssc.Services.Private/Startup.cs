@@ -13,17 +13,14 @@ using Microsoft.Azure.ServiceBus;
 using Sma.Stm.EventBus.Abstractions;
 using Autofac;
 using Sma.Stm.EventBus;
-using Sma.Stm.Services.AuthorizationService.Models;
 using Microsoft.EntityFrameworkCore;
-using Sma.Stm.Services.AuthorizationService.DataAccess;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Sma.Stm.Common.Web;
 using Microsoft.AspNetCore.Mvc;
+using Sma.Stm.Ssc;
 using System.Security.Cryptography.X509Certificates;
-using System.IO;
-using System.Reflection;
 
-namespace Sma.Stm.Services.AuthorizationService
+namespace Sma.Stm.Ssc.Services.Private
 {
     public class Startup
     {
@@ -39,20 +36,25 @@ namespace Sma.Stm.Services.AuthorizationService
         {
             services.AddMvc();
 
+            services.AddScoped<SeaSwimConnectorPrivateService>();
+            services.AddScoped<IdentityRegistryService>();
+            services.AddScoped<ServiceRegistryService>();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
+            });
+
             services.AddApiVersioning(option =>
             {
                 option.ReportApiVersions = true;
                 option.AssumeDefaultVersionWhenUnspecified = true;
                 option.DefaultApiVersion = new ApiVersion(1, 0);
             });
-
-            var sqlConnectionString = Configuration.GetConnectionString("DataAccessPostgreSqlProvider");
-            services.AddDbContext<AuthorizationDbContext>(options =>
-                    options.UseNpgsql(
-                        sqlConnectionString, 
-                        b => b.MigrationsAssembly("Sma.Stm.Services.AuthorizationService")
-                    )
-                );
 
             services.AddSwaggerGen(c =>
             {
@@ -61,6 +63,8 @@ namespace Sma.Stm.Services.AuthorizationService
                 c.OperationFilter<Common.Swagger.RequestContentTypeOperationFilter>();
                 c.OperationFilter<Common.Swagger.ResponseContentTypeOperationFilter>();
             });
+
+             WebRequestHelper.ClientCertificate = new X509Certificate2("mcpcert.pfx", "StmVis123");
 
             if (Configuration.GetValue<bool>("AzureServiceBusEnabled"))
             {
@@ -177,5 +181,6 @@ namespace Sma.Stm.Services.AuthorizationService
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
             //eventBus.Subscribe<NewSubscriptionIntegrationEvent, NewSubscriptionIntegrationEventHandler>();
         }
+
     }
 }

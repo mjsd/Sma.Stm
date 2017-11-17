@@ -35,18 +35,26 @@ services:
     networks:
       - stmnetwork
 
-  sma.stm.apigateway:
-    image: sma.stm.apigateway
+  sma.stm.ssc.apigateway:
+    image: sma.stm.ssc.apigateway
     build:
-      context: ./Sma.Stm.ApiGateway
+      context: ./Sma.Stm.Ssc.ApiGateway
       dockerfile: Dockerfile
     networks:
       - stmnetwork
 
-  sma.stm.services.seaswimprivateservice:
-    image: sma.stm.services.seaswimprivateservice
+  sma.stm.ssc.services.private:
+    image: sma.stm.ssc.services.private
     build:
-      context: ./Sma.Stm.Services.SeaSwimPrivateService
+      context: ./Sma.Stm.Ssc.Services.Private
+      dockerfile: Dockerfile
+    networks:
+      - stmnetwork
+
+  sma.stm.services.notificationservice:
+    image: sma.stm.services.notificationservice
+    build:
+      context: ./Sma.Stm.Services.NotificationService
       dockerfile: Dockerfile
     networks:
       - stmnetwork

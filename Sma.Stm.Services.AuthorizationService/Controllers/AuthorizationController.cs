@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Sma.Stm.EventBus.Abstractions;
-using Sma.Stm.Services.AuthorizationServiceService.Models;
+using Sma.Stm.Services.AuthorizationService.Models;
 using Sma.Stm.EventBus.Events;
 using Sma.Stm.Services.AuthorizationService.DataAccess;
 using Microsoft.EntityFrameworkCore;
@@ -17,12 +17,12 @@ namespace Sma.Stm.Services.AuthorizationService.Controllers
     public class AuthorizationController : Controller
     {
         private readonly IEventBus _eventBus;
-        private readonly AuthorizationDbContext _dbCOntext;
+        private readonly AuthorizationDbContext _dbContext;
 
         public AuthorizationController(AuthorizationDbContext dbCOntext, IEventBus eventBus)
         {
             _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
-            _dbCOntext = dbCOntext ?? throw new ArgumentNullException(nameof(dbCOntext));
+            _dbContext = dbCOntext ?? throw new ArgumentNullException(nameof(dbCOntext));
         }
 
         [HttpGet]
@@ -30,13 +30,9 @@ namespace Sma.Stm.Services.AuthorizationService.Controllers
         [SwaggerResponseContentType(responseType: "application/json", Exclusive = true)]
         public async Task<IActionResult> CheckAuthorization(string orgId, string dataId)
         {
-            var text = System.IO.File.ReadAllText("./appsettings.json");
-            text = text.Replace("EventBusConnection", "MattiasWasHere");
-            System.IO.File.WriteAllText("./appsettings.json", text);
-
             try
             {
-                var acl = await _dbCOntext.Authorizations.FirstOrDefaultAsync(x => x.OrgId == orgId && x.DataId == dataId);
+                var acl = await _dbContext.Authorizations.FirstOrDefaultAsync(x => x.OrgId == orgId && x.DataId == dataId);
 
                 if (acl != null)
                 {
@@ -57,7 +53,7 @@ namespace Sma.Stm.Services.AuthorizationService.Controllers
         {
             try
             {
-                var acl = await _dbCOntext.Authorizations.Where(x => x.DataId == dataId).ToListAsync();
+                var acl = await _dbContext.Authorizations.Where(x => x.DataId == dataId).ToListAsync();
 
                 var response = new List<IdentityDescriptionObject>();
                 foreach (var item in acl)
@@ -91,17 +87,17 @@ namespace Sma.Stm.Services.AuthorizationService.Controllers
             {
                 foreach (var item in items)
                 {
-                    var acl = await _dbCOntext.Authorizations.FirstOrDefaultAsync(x =>
+                    var acl = await _dbContext.Authorizations.FirstOrDefaultAsync(x =>
                         x.DataId == dataId && x.OrgId == item.IdentityId);
 
                     if (acl == null)
                     {
-                        _dbCOntext.Authorizations.Add(new AuthorizationItem
+                        _dbContext.Authorizations.Add(new AuthorizationItem
                         {
                             DataId = dataId,
                             OrgId = item.IdentityId
                         });
-                        await _dbCOntext.SaveChangesAsync();
+                        await _dbContext.SaveChangesAsync();
                     }
                 }
                 return Ok();
@@ -126,13 +122,13 @@ namespace Sma.Stm.Services.AuthorizationService.Controllers
             {
                 foreach (var item in items)
                 {
-                    var acl = await _dbCOntext.Authorizations.FirstOrDefaultAsync(x =>
+                    var acl = await _dbContext.Authorizations.FirstOrDefaultAsync(x =>
                         x.DataId == dataId && x.OrgId == item.IdentityId);
 
                     if (acl != null)
                     {
-                        _dbCOntext.Authorizations.Remove(acl);
-                        await _dbCOntext.SaveChangesAsync();
+                        _dbContext.Authorizations.Remove(acl);
+                        await _dbContext.SaveChangesAsync();
 
                         var newEvent = new AuthorizationRemovedIntegrationEvent
                         {
