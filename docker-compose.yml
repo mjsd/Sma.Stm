@@ -7,8 +7,8 @@ services:
       context: ./Sma.Stm.Services.GenericMessageService
       dockerfile: Dockerfile
     depends_on:
-      - rabbitmq
       - sma.stm.services.authorizationservice
+      - rabbitmq
       - postgres
     networks:
       - stmnetwork
@@ -30,6 +30,7 @@ services:
       context: ./Sma.Stm.Services.SubscriptionService
       dockerfile: Dockerfile
     depends_on:
+      - sma.stm.services.authorizationservice
       - rabbitmq
       - postgres
     networks:
@@ -56,6 +57,9 @@ services:
     build:
       context: ./Sma.Stm.Services.NotificationService
       dockerfile: Dockerfile
+    depends_on:
+      - rabbitmq
+      - postgres
     networks:
       - stmnetwork
 
