@@ -137,6 +137,8 @@ namespace Sma.Stm.Services.GenericMessageService
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseSeaSwimAuthentication(new object());
+
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto

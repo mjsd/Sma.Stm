@@ -26,5 +26,7 @@ namespace Sma.Stm.Ssc
 
         public string CallerServiceId { get; set; }
 
+        public bool IsAuthenticated { get; set; }
+
     }
 }

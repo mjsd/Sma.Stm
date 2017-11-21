@@ -8,6 +8,8 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
+using System.IO;
+using System.Net;
 
 namespace Sma.Stm.Ssc
 {
@@ -37,34 +39,27 @@ namespace Sma.Stm.Ssc
             {
                 throw new ArgumentNullException(nameof(context));
             }
-            if (context.Connection.ClientCertificate == null)
-            {
-                // throw new ArgumentNullException("Client certificate");
-                var instanceContextService = context.RequestServices.GetRequiredService<SeaSwimInstanceContextService>();
-                instanceContextService.CallerOrgId = "orgid";
-                instanceContextService.CallerServiceId = "serviceid";
 
+            var instanceContextService = context.RequestServices.GetRequiredService<SeaSwimInstanceContextService>();
+
+            var header = context.Request.Headers["X-SSL-CERT"];
+
+            if (string.IsNullOrEmpty(header))
+            { 
+                instanceContextService.IsAuthenticated = false;
                 await _next.Invoke(context);
                 return;
             }
 
-            var errors = string.Empty;
-            if (CertificateValidator.IsCertificateValid(context.Connection.ClientCertificate, "ac1f8f49454e46a00d0f1e12fc4f689bf6726b0a", out errors))
-            {
-                var instanceContextService = context.RequestServices.GetRequiredService<SeaSwimInstanceContextService>();
-                instanceContextService.CallerOrgId = GetOrgId(context.Connection.ClientCertificate);
-                instanceContextService.CallerServiceId = GetServiceId(context.Connection.ClientCertificate);
 
-                await _next.Invoke(context);
-            }
-            else
-            {
-                context.Response.Clear();
-                context.Response.StatusCode = 401;
-                context.Response.ContentType = "application/json";
+            var decoded = WebUtility.UrlDecode(header).Replace("{", "").Replace("}", "");
+            var cert = new X509Certificate2(Encoding.UTF8.GetBytes(decoded));
 
-                await context.Response.WriteAsync($"Unauthorized {errors}");
-            }
+            instanceContextService.IsAuthenticated = false;
+            instanceContextService.CallerOrgId = GetOrgId(cert);
+            instanceContextService.CallerServiceId = GetServiceId(cert);
+
+            await _next.Invoke(context);
         }
 
         private string GetOrgId(X509Certificate2 cert)
