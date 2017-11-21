@@ -21,6 +21,7 @@ using Sma.Stm.Ssc;
 using Sma.Stm.Services.GenericMessageService.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Sma.Stm.Common.Web;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace Sma.Stm.Services.GenericMessageService
 {
@@ -136,6 +137,10 @@ namespace Sma.Stm.Services.GenericMessageService
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();

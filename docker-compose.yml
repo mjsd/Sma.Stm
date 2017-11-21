@@ -1,6 +1,22 @@
 version: '3'
 
 services:
+  proxy:
+    image: nginx.proxy
+    restart: always
+    build:
+      context:  ./nginx
+      dockerfile: Dockerfile
+    links:
+      - sma.stm.services.genericmessageservice
+      - sma.stm.services.authorizationservice
+      - sma.stm.services.subscriptionservice
+      - sma.stm.ssc.services.private
+      - sma.stm.services.notificationservice
+      - sma.stm.messagesenderservice
+    networks:
+      - stmnetwork
+
   sma.stm.services.genericmessageservice:
     image: sma.stm.services.genericmessageservice
     build:
@@ -36,13 +52,13 @@ services:
     networks:
       - stmnetwork
 
-  sma.stm.ssc.apigateway:
-    image: sma.stm.ssc.apigateway
-    build:
-      context: ./Sma.Stm.Ssc.ApiGateway
-      dockerfile: Dockerfile
-    networks:
-      - stmnetwork
+  #sma.stm.ssc.apigateway:
+  #  image: sma.stm.ssc.apigateway
+  #  build:
+  #    context: ./Sma.Stm.Ssc.ApiGateway
+  #    dockerfile: Dockerfile
+  #  networks:
+  #    - stmnetwork
 
   sma.stm.ssc.services.private:
     image: sma.stm.ssc.services.private

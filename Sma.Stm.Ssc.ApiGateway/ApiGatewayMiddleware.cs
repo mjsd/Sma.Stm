@@ -58,13 +58,13 @@ namespace Sma.Stm.Ssc.ApiGateway
             var path = target.Path;
             var queryString = target.QueryString;
 
-            if (string.IsNullOrEmpty(target.Scheme))
+            if (target.Scheme == null)
                 scheme = context.Request.Scheme;
-            if (string.IsNullOrEmpty(target.Host))
+            if (target.Host == null)
                 host = context.Request.Host.Value;
-            if (string.IsNullOrEmpty(target.Path))
+            if (target.Path == null)
                 path = context.Request.Path.Value;
-            if (string.IsNullOrEmpty(target.QueryString))
+            if (target.QueryString == null)
                 queryString = context.Request.QueryString.Value;
 
             var uri = new Uri(UriHelper.BuildAbsolute(scheme, new HostString(host), target.PathBase, path, new QueryString(queryString)));

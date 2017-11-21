@@ -37,12 +37,50 @@ namespace Sma.Stm.Ssc.ApiGateway
                     {
                         listenOptions.UseHttps(new HttpsConnectionAdapterOptions
                         {
-                            ServerCertificate = new X509Certificate2("cert.pfx", "4Gr8Access!"),
-                            //CheckCertificateRevocation = true,
-                            //ClientCertificateMode = ClientCertificateMode.RequireCertificate,
+                            SslProtocols = SslProtocols.Tls | SslProtocols.Tls11 | SslProtocols.Tls12,
+                            ServerCertificate = new X509Certificate2("cert_digicert.pfx", "4Gr8Access!"),
+                            CheckCertificateRevocation = true,
+                            ClientCertificateValidation = Check,
+                            ClientCertificateMode = ClientCertificateMode.RequireCertificate,
+                        });
+                    });
+                    options.Listen(IPAddress.Any, 444, listenOptions =>
+                    {
+                        listenOptions.UseHttps(new HttpsConnectionAdapterOptions
+                        {
+                            SslProtocols = SslProtocols.Tls | SslProtocols.Tls11 | SslProtocols.Tls12,
+                            ServerCertificate = new X509Certificate2("cert_mcp.pfx", "StmVis1234"),
+                            CheckCertificateRevocation = true,
+                            ClientCertificateValidation = Check,
+                            ClientCertificateMode = ClientCertificateMode.RequireCertificate,
                         });
                     });
                 })
                 .Build();
+
+        private static bool Check(X509Certificate2 cert, X509Chain chain, System.Net.Security.SslPolicyErrors policy)
+        {
+            chain.ChainPolicy = new X509ChainPolicy()
+            {
+                RevocationFlag = X509RevocationFlag.EndCertificateOnly,
+                RevocationMode = X509RevocationMode.NoCheck,
+                UrlRetrievalTimeout = new TimeSpan(0, 0, 10),
+                VerificationTime = DateTime.UtcNow
+            };
+
+            var result = chain.Build(cert);
+            if (result == true)
+            {
+                return true;
+            }
+
+            var errors = string.Empty;
+            foreach (X509ChainStatus chainStatus in chain.ChainStatus)
+            {
+                errors += string.Format("Chain error: {0} {1}", chainStatus.Status, chainStatus.StatusInformation);
+            }
+
+            return true;
+        }
     }
 }

@@ -16,7 +16,7 @@ namespace Sma.Stm.Common.Security
             chain.ChainPolicy = new X509ChainPolicy()
             {
                 RevocationFlag = X509RevocationFlag.EndCertificateOnly,
-                RevocationMode = X509RevocationMode.Online,
+                RevocationMode = X509RevocationMode.NoCheck,
                 UrlRetrievalTimeout = new TimeSpan(0, 0, 10),
                 VerificationTime = DateTime.UtcNow
             };

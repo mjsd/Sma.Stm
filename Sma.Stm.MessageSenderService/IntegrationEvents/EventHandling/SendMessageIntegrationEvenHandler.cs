@@ -17,13 +17,16 @@ namespace Sma.Stm.Services.GenericMessageService.IntegrationEvents.EventHandling
 
         public async Task Handle(SendMessageIntegrationEven @event)
         {
-            var headers = new WebHeaderCollection();
+            List<Ssc.Header> headers = null;
             if (!string.IsNullOrEmpty(@event.ContentType))
             {
-                headers.Add("Content-type", @event.ContentType);
+                headers = new List<Ssc.Header>
+                {
+                    new Ssc.Header { Key = "Content-type", Value = @event.ContentType}
+                };
             }
 
-            var result = WebRequestHelper.Post(@event.Url.ToString(), @event.Body, headers);
+            Services.SeaSwimService.CallService(@event.Body, @event.Url.ToString(), @event.HttpMethod, headers);
             await Task.FromResult(0);
         }
     }

@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography.X509Certificates;
 using System.IO;
 using System.Reflection;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace Sma.Stm.Services.AuthorizationService
 {
@@ -119,6 +120,11 @@ namespace Sma.Stm.Services.AuthorizationService
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2008
+VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{D16C69B8-07A3-41DE-9F4D-FABCC9379B1F}"
 EndProject
@@ -42,6 +42,15 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SeaSwim", "SeaSwim", "{0E977B44-D7ED-4318-AC77-E47BF64108AB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sma.Stm.Services.NotificationService", "Sma.Stm.Services.NotificationService\Sma.Stm.Services.NotificationService.csproj", "{2E9F1264-D1B6-4038-8BD5-483171429B36}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nginx", "Nginx", "{FFBB220D-0AD4-4E09-8E09-4C604B4A96CD}"
+	ProjectSection(SolutionItems) = preProject
+		Nginx\ca.pem = Nginx\ca.pem
+		Nginx\cert.pem = Nginx\cert.pem
+		Nginx\Dockerfile = Nginx\Dockerfile
+		Nginx\key.pem = Nginx\key.pem
+		Nginx\nginx.conf = Nginx\nginx.conf
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

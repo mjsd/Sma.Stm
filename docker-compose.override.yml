@@ -1,6 +1,11 @@
 version: '3'
 
 services:
+  proxy:
+    ports:
+      - "8080:443"
+      - "8081:444"
+
   sma.stm.services.genericmessageservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -31,11 +36,12 @@ services:
     ports:
       - "5003:80"
 
-  sma.stm.ssc.apigateway:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-    ports:
-      - "8080:443"
+  #sma.stm.ssc.apigateway:
+  #  environment:
+  #    - ASPNETCORE_ENVIRONMENT=Development
+  #  ports:
+  #    - "8080:443"
+  #    - "8081:444"
 
   sma.stm.ssc.services.private:
     environment:

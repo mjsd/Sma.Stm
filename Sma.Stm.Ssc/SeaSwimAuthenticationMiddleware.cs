@@ -93,7 +93,7 @@ namespace Sma.Stm.Ssc
                 var parts = item.Split('=');
                 if (parts != null && parts.Count() == 2)
                 {
-                    if(parts[0].Trim().StartsWith("OID"))
+                    if(parts[0].Trim().StartsWith("userId"))
                     {
                         return parts[1];
                     }
