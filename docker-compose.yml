@@ -2,7 +2,7 @@ version: '3'
 
 services:
   proxy:
-    image: nginx.proxy
+    image: mjsd/nginx.proxy:latest
     restart: always
     build:
       context:  ./nginx
@@ -13,12 +13,12 @@ services:
       - sma.stm.services.subscriptionservice
       - sma.stm.ssc.services.private
       - sma.stm.services.notificationservice
-      - sma.stm.messagesenderservice
+      - sma.stm.services.messagesenderservice
     networks:
       - stmnetwork
 
   sma.stm.services.genericmessageservice:
-    image: sma.stm.services.genericmessageservice
+    image: mjsd/sma.stm.services.genericmessageservice${TAG}
     build:
       context: ./Sma.Stm.Services.GenericMessageService
       dockerfile: Dockerfile
@@ -30,7 +30,7 @@ services:
       - stmnetwork
 
   sma.stm.services.authorizationservice:
-    image: sma.stm.services.authorizationservice
+    image: mjsd/sma.stm.services.authorizationservice${TAG}
     build:
       context: ./Sma.Stm.Services.AuthorizationService
       dockerfile: Dockerfile
@@ -41,7 +41,7 @@ services:
       - stmnetwork
 
   sma.stm.services.subscriptionservice:
-    image: sma.stm.services.subscriptionservice
+    image: mjsd/sma.stm.services.subscriptionservice${TAG}
     build:
       context: ./Sma.Stm.Services.SubscriptionService
       dockerfile: Dockerfile
@@ -52,16 +52,8 @@ services:
     networks:
       - stmnetwork
 
-  #sma.stm.ssc.apigateway:
-  #  image: sma.stm.ssc.apigateway
-  #  build:
-  #    context: ./Sma.Stm.Ssc.ApiGateway
-  #    dockerfile: Dockerfile
-  #  networks:
-  #    - stmnetwork
-
   sma.stm.ssc.services.private:
-    image: sma.stm.ssc.services.private
+    image: mjsd/sma.stm.ssc.services.private${TAG}
     build:
       context: ./Sma.Stm.Ssc.Services.Private
       dockerfile: Dockerfile
@@ -69,7 +61,7 @@ services:
       - stmnetwork
 
   sma.stm.services.notificationservice:
-    image: sma.stm.services.notificationservice
+    image: mjsd/sma.stm.services.notificationservice${TAG}
     build:
       context: ./Sma.Stm.Services.NotificationService
       dockerfile: Dockerfile
@@ -79,10 +71,10 @@ services:
     networks:
       - stmnetwork
 
-  sma.stm.messagesenderservice:
-    image: sma.stm.messagesenderservice
+  sma.stm.services.messagesenderservice:
+    image: mjsd/sma.stm.services.messagesenderservice${TAG}
     build:
-      context: ./Sma.Stm.MessageSenderService
+      context: ./Sma.Stm.Services.MessageSenderService
       dockerfile: Dockerfile
     depends_on:
       - rabbitmq
@@ -97,17 +89,8 @@ services:
   postgres:
     image: postgres
     restart: always
-    environment:
-        POSTGRES_PASSWORD: "1234"
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
     networks:
        - stmnetwork
-
-volumes:
-  pgdata:
 
 networks:
   stmnetwork:

@@ -37,15 +37,6 @@ namespace Sma.Stm.Services.GenericMessageService
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options =>
-            {
-                options.AddPolicy("CorsPolicy",
-                    builder => builder.AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials());
-            });
-
             services.AddMvc(options =>
             {
                 options.Filters.Add(typeof(SeaSwimActionFilter));
@@ -130,11 +121,16 @@ namespace Sma.Stm.Services.GenericMessageService
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, 
-            IHostingEnvironment env)
+            IHostingEnvironment env, IServiceProvider sp)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+
+            using (var db = sp.GetRequiredService<GenericMessageDbContext>())
+            {
+                db.Database.MigrateAsync();
             }
 
             app.UseSeaSwimAuthentication(new object());

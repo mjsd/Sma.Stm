@@ -25,7 +25,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="mcpcert.pfx" />
+    <EmbeddedResource Include="mcpcert.pfx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
@@ -36,6 +38,15 @@
     <ProjectReference Include="..\Sma.Stm.EventBus\Sma.Stm.EventBus\Sma.Stm.EventBus.csproj" />
     <ProjectReference Include="..\Sma.Stm.Ssc.Contract\Sma.Stm.Ssc.Contract.csproj" />
     <ProjectReference Include="..\Sma.Stm.Ssc\Sma.Stm.Ssc.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="mc-idreg-cert.crt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="mc-root-cert.crt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

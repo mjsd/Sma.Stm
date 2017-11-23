@@ -36,13 +36,6 @@ services:
     ports:
       - "5003:80"
 
-  #sma.stm.ssc.apigateway:
-  #  environment:
-  #    - ASPNETCORE_ENVIRONMENT=Development
-  #  ports:
-  #    - "8080:443"
-  #    - "8081:444"
-
   sma.stm.ssc.services.private:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -63,10 +56,21 @@ services:
     ports:
       - "5005:80"
 
-  sma.stm.messagesenderservice:
+  sma.stm.services.messagesenderservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - EventBusConnection=${AZURE_SERVICE_BUS:-rabbitmq}
       - EventBusUserName=${SERVICE_BUS_USERNAME}
       - EventBusPassword=${SERVICE_BUS_PASSWORD}      
       - AzureServiceBusEnabled=False
+  
+  postgres:
+    environment:
+        POSTGRES_PASSWORD: "1234"
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

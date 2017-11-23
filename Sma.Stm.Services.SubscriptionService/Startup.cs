@@ -57,7 +57,6 @@ namespace Sma.Stm.Services.SubscriptionService
                     )
                 );
 
-
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
@@ -114,11 +113,17 @@ namespace Sma.Stm.Services.SubscriptionService
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, 
+            IHostingEnvironment env, IServiceProvider sp)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+
+            using (var db = sp.GetRequiredService<SubscriptionDbContext>())
+            {
+                db.Database.MigrateAsync();
             }
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.

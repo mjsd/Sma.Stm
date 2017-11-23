@@ -16,7 +16,7 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
     {
         public static void Validate(string message, IHostingEnvironment env)
         {
-            var schemaPath = Path.Combine(env.ContentRootPath, @"schema/");
+            var schemaPath = Path.Combine(env.ContentRootPath, @"Schema/");
             var shcemas = new List<XmlSchema>();
 
             foreach (var schemaFile in Directory.EnumerateFiles(schemaPath, "*.xsd"))
