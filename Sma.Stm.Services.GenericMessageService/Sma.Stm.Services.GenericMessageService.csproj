@@ -36,6 +36,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Plugins\Sma.Stm.Plugins.Rtz.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Schema\rtz_format_1_1_29032017.xsd">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>

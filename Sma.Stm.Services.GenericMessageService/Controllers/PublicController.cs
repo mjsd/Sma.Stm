@@ -31,7 +31,6 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
         private readonly IEventBus _eventBus;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly ILogger<PublicController> _logger;
-        private readonly IConfiguration _configuration;
         private readonly SeaSwimInstanceContextService _seaSwimInstanceContextService;
         private readonly GenericMessageDbContext _dbContext;
 
@@ -113,14 +112,10 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
             {
                 Validate(message, _hostingEnvironment);
 
-                var dataIdXPath = _configuration.GetValue<string>("DataIdXPath");
-                var parser = new XmlParser(message);
-                parser.SetNamespaces(_configuration.GetValue<string>("Namespaces"));
-
                 var uploadedMessage = new UploadedMessage
                 {
                     Content = message,
-                    DataId = parser.GetValue(dataIdXPath),
+                    DataId = GetDataId(message),
                     FromOrgId = _seaSwimInstanceContextService.CallerOrgId,
                     FromServiceId = _seaSwimInstanceContextService.CallerServiceId,
                     ReceiveTime = DateTime.UtcNow,
