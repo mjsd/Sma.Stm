@@ -34,10 +34,11 @@
     <ProjectReference Include="..\Sma.Stm.EventBus\Sma.Stm.EventBusRabbitMQ\Sma.Stm.EventBusRabbitMQ.csproj" />
     <ProjectReference Include="..\Sma.Stm.EventBus\Sma.Stm.EventBusServiceBus\Sma.Stm.EventBusServiceBus.csproj" />
     <ProjectReference Include="..\Sma.Stm.EventBus\Sma.Stm.EventBus\Sma.Stm.EventBus.csproj" />
+    <ProjectReference Include="..\Sma.Stm.Ssc.Contract\Sma.Stm.Ssc.Contract.csproj" />
+    <ProjectReference Include="..\Sma.Stm.Ssc\Sma.Stm.Ssc.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="IntegrationEvents\EventHandling\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 

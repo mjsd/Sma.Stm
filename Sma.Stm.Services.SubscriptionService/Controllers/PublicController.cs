@@ -21,14 +21,17 @@ namespace Sma.Stm.Services.SubscriptionService.Controllers
         private readonly IEventBus _eventBus;
         private readonly SubscriptionDbContext _dbContext;
         private readonly SeaSwimInstanceContextService _seaSwimInstanceContextService;
+        private readonly SeaSwimIdentityService _seaSwimIdentityService;
 
         public PublicController(IEventBus eventBus,
             SubscriptionDbContext dbContext,
-            SeaSwimInstanceContextService seaSwimInstanceContextService)
+            SeaSwimInstanceContextService seaSwimInstanceContextService,
+            SeaSwimIdentityService seaSwimIdentityService)
         {
             _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _seaSwimInstanceContextService = seaSwimInstanceContextService ?? throw new ArgumentNullException(nameof(seaSwimInstanceContextService));
+            _seaSwimIdentityService = seaSwimIdentityService ?? throw new ArgumentNullException(nameof(seaSwimIdentityService));
         }
 
         [HttpGet("subscription")]
@@ -49,7 +52,7 @@ namespace Sma.Stm.Services.SubscriptionService.Controllers
                 {
                     response.Add(new GetSubscriptionResponseObj
                     {
-                        DataId = item.DataId
+                        DataId = item.DataId,
                     });
                 }
 
@@ -68,6 +71,20 @@ namespace Sma.Stm.Services.SubscriptionService.Controllers
             {
                 if (!AuthorizationService.CheckAuthentication(_seaSwimInstanceContextService.CallerOrgId, dataId))
                 {
+                    var orgName = _seaSwimIdentityService.GetIdentityName(_seaSwimInstanceContextService.CallerOrgId);
+                    var @event = new NotificationIntegrationEvent
+                    {
+                        FromOrgId = _seaSwimInstanceContextService.CallerOrgId,
+                        FromOrgName = orgName,
+                        FromServiceId = _seaSwimInstanceContextService.CallerServiceId,
+                        NotificationCreatedAt = DateTime.UtcNow,
+                        NotificationType = EnumNotificationType.UNAUTHORIZED_REQUEST,
+                        Subject = "Unauthorized subscription request",
+                        NotificationSource = EnumNotificationSource.VIS,
+                        Body = $"Organization {orgName} {_seaSwimInstanceContextService.CallerOrgId} is not authorized to {dataId}"
+                    };
+                    _eventBus.Publish(@event);
+
                     return Unauthorized();
                 }
 

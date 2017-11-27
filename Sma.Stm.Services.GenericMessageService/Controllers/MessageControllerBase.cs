@@ -36,6 +36,15 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
             return parser.GetValue(dataIdXPath);
         }
 
+        protected string GetStatus(string message)
+        {
+            var dataIdXPath = _configuration.GetValue<string>("StatusXPath");
+            var parser = new XmlParser(message);
+            parser.SetNamespaces(_configuration.GetValue<string>("Namespaces"));
+
+            return parser.GetValue(dataIdXPath);
+        }
+
         private void ExtendedValidation(string message, string pluginPath)
         {
             var validator = new ExtendedValidationHandler(pluginPath);

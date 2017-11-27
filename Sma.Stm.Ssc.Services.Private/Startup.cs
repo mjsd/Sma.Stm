@@ -40,15 +40,6 @@ namespace Sma.Stm.Ssc.Services.Private
             services.AddScoped<IdentityRegistryService>();
             services.AddScoped<ServiceRegistryService>();
 
-            services.AddCors(options =>
-            {
-                options.AddPolicy("CorsPolicy",
-                    builder => builder.AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials());
-            });
-
             services.AddApiVersioning(option =>
             {
                 option.ReportApiVersions = true;

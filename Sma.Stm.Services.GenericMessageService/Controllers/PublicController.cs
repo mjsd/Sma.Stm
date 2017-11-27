@@ -33,13 +33,15 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
         private readonly ILogger<PublicController> _logger;
         private readonly SeaSwimInstanceContextService _seaSwimInstanceContextService;
         private readonly GenericMessageDbContext _dbContext;
+        private readonly SeaSwimIdentityService _seaSwimIdentityService;
 
         public PublicController(IEventBus eventBus,
             IHostingEnvironment hostingEnvironment,
             ILogger<PublicController> logger,
             IConfiguration configuration,
             SeaSwimInstanceContextService seaSwimInstanceContextService,
-            GenericMessageDbContext dbCOntext)
+            GenericMessageDbContext dbCOntext,
+            SeaSwimIdentityService seaSwimIdentityService)
         {
             _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
             _hostingEnvironment = hostingEnvironment ?? throw new ArgumentNullException(nameof(hostingEnvironment));
@@ -47,6 +49,7 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _seaSwimInstanceContextService = seaSwimInstanceContextService ?? throw new ArgumentNullException(nameof(seaSwimInstanceContextService));
             _dbContext = dbCOntext ?? throw new ArgumentNullException(nameof(dbCOntext));
+            _seaSwimIdentityService = seaSwimIdentityService ?? throw new ArgumentNullException(nameof(seaSwimIdentityService));
         }
 
         [HttpGet("message")]
@@ -86,6 +89,8 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
 
                 if (items.Count() > 0 && response.VoyagePlans.Count() == 0)
                     return Unauthorized();
+                else if (items.Count() == 0)
+                    return NotFound();
 
                 return Ok(response);
             }
@@ -145,10 +150,12 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
 
                 _eventBus.Publish(@event);
 
+                var orgName = _seaSwimIdentityService.GetIdentityName(_seaSwimInstanceContextService.CallerOrgId);
+
                 var @notificationEvent = new NotificationIntegrationEvent
                 {
                     FromOrgId = _seaSwimInstanceContextService.CallerOrgId,
-                    FromOrgName = "",
+                    FromOrgName = orgName,
                     FromServiceId = _seaSwimInstanceContextService.CallerServiceId,
                     NotificationCreatedAt = DateTime.UtcNow,
                     NotificationType = EnumNotificationType.MESSAGE_WAITING,
@@ -171,10 +178,12 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
         [SwaggerRequestContentType(requestType: "application/json", Exclusive = true)]
         public async virtual Task<IActionResult> Acknowledgement([FromBody]DeliveryAck deliveryAck)
         {
+            var orgName = _seaSwimIdentityService.GetIdentityName(_seaSwimInstanceContextService.CallerOrgId);
+
             var @event = new NotificationIntegrationEvent
             {
                 FromOrgId = _seaSwimInstanceContextService.CallerOrgId,
-                FromOrgName = "",
+                FromOrgName = orgName,
                 FromServiceId = _seaSwimInstanceContextService.CallerServiceId,
                 NotificationCreatedAt = DateTime.UtcNow,
                 NotificationType = EnumNotificationType.ACKNOWLEDGEMENT_RECEIVED,

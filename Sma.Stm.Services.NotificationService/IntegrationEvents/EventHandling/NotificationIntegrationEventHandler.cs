@@ -11,6 +11,7 @@ using Sma.Stm.Common.Web;
 using Newtonsoft.Json;
 using System.Net;
 using Microsoft.AspNetCore.Http;
+using Sma.Stm.Common;
 
 namespace Sma.Stm.Services.GenericMessageService.IntegrationEvents.EventHandling
 {
@@ -44,7 +45,7 @@ namespace Sma.Stm.Services.GenericMessageService.IntegrationEvents.EventHandling
 
             var headers = new WebHeaderCollection
             {
-                { HttpRequestHeader.ContentType, "application/json; charset=utf-8" }
+                { HttpRequestHeader.ContentType, Constants.CONTENT_TYPE_APPLICATION_JSON }
             };
 
             var subscribers = await _dbContext.Subscribers.ToListAsync();

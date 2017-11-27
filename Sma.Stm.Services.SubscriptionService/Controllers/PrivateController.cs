@@ -21,12 +21,15 @@ namespace Sma.Stm.Services.SubscriptionService.Controllers
     {
         private readonly IEventBus _eventBus;
         private readonly SubscriptionDbContext _dbContext;
+        private readonly SeaSwimIdentityService _seaSwimIdentityService;
 
         public PrivateController(IEventBus eventBus,
-            SubscriptionDbContext dbContext)
+            SubscriptionDbContext dbContext,
+            SeaSwimIdentityService seaSwimIdentityService)
         {
             _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            _seaSwimIdentityService = seaSwimIdentityService ?? throw new ArgumentNullException(nameof(seaSwimIdentityService));
         }
 
         [HttpGet("subscription")]
@@ -40,10 +43,12 @@ namespace Sma.Stm.Services.SubscriptionService.Controllers
                 var response = new List<SubscriptionObject>();
                 foreach (var item in acl)
                 {
+                    var orgName = _seaSwimIdentityService.GetIdentityName(item.OrgId);
+
                     response.Add(new SubscriptionObject
                     {
                         IdentityId = item.OrgId,
-                        IdentityName = "",
+                        IdentityName = orgName,
                         EndpointURL = new Uri(item.CallbackEndpoint)
                     });
                 }

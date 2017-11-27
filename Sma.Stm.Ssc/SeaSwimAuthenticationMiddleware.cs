@@ -20,16 +20,12 @@ namespace Sma.Stm.Ssc
 
         public SeaSwimAuthenticationMiddleware(RequestDelegate next, IOptions<object> options)
         {
-            if (next == null)
-            {
-                throw new ArgumentNullException(nameof(next));
-            }
             if (options == null)
             {
                 throw new ArgumentNullException(nameof(options));
             }
 
-            _next = next;
+            _next = next ?? throw new ArgumentNullException(nameof(next));
             _options = options.Value;
         }
 
@@ -50,7 +46,6 @@ namespace Sma.Stm.Ssc
                 await _next.Invoke(context);
                 return;
             }
-
 
             var decoded = WebUtility.UrlDecode(header).Replace("{", "").Replace("}", "");
             var cert = new X509Certificate2(Encoding.UTF8.GetBytes(decoded));

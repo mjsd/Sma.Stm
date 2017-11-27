@@ -23,6 +23,9 @@ using System.Security.Cryptography.X509Certificates;
 using System.IO;
 using System.Reflection;
 using Microsoft.AspNetCore.HttpOverrides;
+using Sma.Stm.Services.AuthorizationService.IntegrationEvents.EventHandling;
+using Sma.Stm.EventBus.Events;
+using Sma.Stm.Ssc;
 
 namespace Sma.Stm.Services.AuthorizationService
 {
@@ -46,6 +49,8 @@ namespace Sma.Stm.Services.AuthorizationService
                 option.AssumeDefaultVersionWhenUnspecified = true;
                 option.DefaultApiVersion = new ApiVersion(1, 0);
             });
+
+            services.AddSingleton<SeaSwimIdentityService>();
 
             var sqlConnectionString = Configuration.GetConnectionString("DataAccessPostgreSqlProvider");
             services.AddDbContext<AuthorizationDbContext>(options =>
@@ -178,13 +183,13 @@ namespace Sma.Stm.Services.AuthorizationService
             }
 
             services.AddSingleton<IEventBusSubscriptionsManager, InMemoryEventBusSubscriptionsManager>();
-            //services.AddTransient<NewSubscriptionIntegrationEventHandler>();
+            services.AddTransient<MessageDeletedIntegrationEventHandler>();
         }
 
         private void ConfigureEventBus(IApplicationBuilder app)
         {
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
-            //eventBus.Subscribe<NewSubscriptionIntegrationEvent, NewSubscriptionIntegrationEventHandler>();
+            eventBus.Subscribe<MessageDeletedIntegrationEvent, MessageDeletedIntegrationEventHandler>();
         }
     }
 }

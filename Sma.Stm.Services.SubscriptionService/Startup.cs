@@ -48,6 +48,7 @@ namespace Sma.Stm.Services.SubscriptionService
             });
 
             services.AddScoped<SeaSwimInstanceContextService>();
+            services.AddSingleton<SeaSwimIdentityService>();
 
             var sqlConnectionString = Configuration.GetConnectionString("DataAccessPostgreSqlProvider");
             services.AddDbContext<SubscriptionDbContext>(options =>
@@ -175,6 +176,7 @@ namespace Sma.Stm.Services.SubscriptionService
             services.AddSingleton<IEventBusSubscriptionsManager, InMemoryEventBusSubscriptionsManager>();
             services.AddTransient<AuthorizationRemovedIntegrationEventHandler>();
             services.AddTransient<MessagePublishedIntegrationEventHandler>();
+            services.AddTransient<MessageDeletedIntegrationEventHandler>();
         }
 
         private void ConfigureEventBus(IApplicationBuilder app)
@@ -182,6 +184,7 @@ namespace Sma.Stm.Services.SubscriptionService
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
             eventBus.Subscribe<AuthorizationRemovedIntegrationEvent, AuthorizationRemovedIntegrationEventHandler>();
             eventBus.Subscribe<MessagePublishedIntegrationEvent, MessagePublishedIntegrationEventHandler>();
+            eventBus.Subscribe<MessageDeletedIntegrationEvent, MessageDeletedIntegrationEventHandler>();
         }
     }
 }

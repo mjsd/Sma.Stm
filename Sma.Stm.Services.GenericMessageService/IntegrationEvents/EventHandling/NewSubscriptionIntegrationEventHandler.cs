@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Sma.Stm.Common;
+using Sma.Stm.Common.Web;
 
 namespace Sma.Stm.Services.GenericMessageService.IntegrationEvents.EventHandling
 {
@@ -29,8 +31,9 @@ namespace Sma.Stm.Services.GenericMessageService.IntegrationEvents.EventHandling
                 var newEvent = new SendMessageIntegrationEven
                 {
                     Body = message.Content,
-                    ContentType = "text/xml",
-                    Url = new Uri(@event.CallbackEndpoint)
+                    ContentType = Constants.CONTENT_TYPE_TEXT_XML,
+                    HttpMethod = "POST",
+                    Url = new Uri(WebRequestHelper.CombineUrl(@event.CallbackEndpoint, "voyagePlans"))
                 };
 
                 _eventBus.Publish(newEvent);

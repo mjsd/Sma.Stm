@@ -19,6 +19,8 @@ using Sma.Stm.Services.GenericMessageService.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Sma.Stm.Common.Swagger;
 using Newtonsoft.Json;
+using Sma.Stm.Common;
+using Microsoft.Extensions.Configuration;
 
 namespace Sma.Stm.Services.GenericMessageService.Controllers
 {
@@ -33,12 +35,14 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
         public PrivateController(GenericMessageDbContext dbCOntext,
             IEventBus eventBus,
             IHostingEnvironment hostingEnvironment,
+            IConfiguration configuration,
             ILogger<PrivateController> logger)
         {
             _dbContext = dbCOntext ?? throw new ArgumentNullException(nameof(dbCOntext));
             _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
             _hostingEnvironment = hostingEnvironment ?? throw new ArgumentNullException(nameof(hostingEnvironment));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
         [HttpGet("uploadedMessage")]
@@ -103,7 +107,7 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
                         var newEvent = new SendMessageIntegrationEven
                         {
                             Body = JsonConvert.SerializeObject(ack),
-                            ContentType = "application/json; charset=utf-8",
+                            ContentType = Constants.CONTENT_TYPE_APPLICATION_JSON,
                             Url = new Uri("https://161.54.241.174:8080/acknowledgement"),
                             HttpMethod = "POST",
                             SenderOrgId = "",
@@ -173,6 +177,7 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
                     {
                         Content = message,
                         DataId = dataId,
+                        Status = GetStatus(message),
                         PublishTime = DateTime.UtcNow
                     });
                 }
@@ -214,6 +219,12 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
                 }
 
                 _dbContext.SaveChanges();
+
+                var @event = new MessageDeletedIntegrationEvent
+                {
+                    DataId = dataId
+                };
+                _eventBus.Publish(@event);
 
                 return Ok();
             }

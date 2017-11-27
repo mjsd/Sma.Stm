@@ -50,7 +50,9 @@ namespace Sma.Stm.Services.GenericMessageService
                 option.DefaultApiVersion = new ApiVersion(1, 0);
             });
 
+
             services.AddScoped<SeaSwimInstanceContextService>();
+            services.AddSingleton<SeaSwimIdentityService>();
 
             var sqlConnectionString = Configuration.GetConnectionString("DataAccessPostgreSqlProvider");
             services.AddDbContext<GenericMessageDbContext>(options =>

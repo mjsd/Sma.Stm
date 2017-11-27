@@ -12,35 +12,26 @@ using Sma.Stm.Common.Web;
 
 namespace Sma.Stm.Services.SubscriptionService.IntegrationEvents.EventHandling
 {
-    public class MessagePublishedIntegrationEventHandler : IIntegrationEventHandler<MessagePublishedIntegrationEvent>
+    public class MessageDeletedIntegrationEventHandler : IIntegrationEventHandler<MessageDeletedIntegrationEvent>
     {
         private readonly IEventBus _eventBus;
         private readonly SubscriptionDbContext _dbContext;
 
-        public MessagePublishedIntegrationEventHandler(IEventBus eventBus,
+        public MessageDeletedIntegrationEventHandler(IEventBus eventBus,
             SubscriptionDbContext dbContext)
         {
             _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public async Task Handle(MessagePublishedIntegrationEvent @event)
+        public async Task Handle(MessageDeletedIntegrationEvent @event)
         {
             try
             {
                 var subscribers = await _dbContext.Subscriptions.Where(x => x.DataId == @event.DataId).ToListAsync();
-                foreach (var subscriber in subscribers)
-                {
-                    var newEvent = new SendMessageIntegrationEven
-                    {
-                        Body = @event.Content,
-                        ContentType = Constants.CONTENT_TYPE_TEXT_XML,
-                        HttpMethod = "POST",
-                        Url = new Uri(WebRequestHelper.CombineUrl(subscriber.CallbackEndpoint, "/voyagePlans"))
-                    };
+                _dbContext.Subscriptions.RemoveRange(subscribers);
 
-                    _eventBus.Publish(newEvent);
-                }
+                _dbContext.SaveChanges();
             }
             catch (Exception)
             {

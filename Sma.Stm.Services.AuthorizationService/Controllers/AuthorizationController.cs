@@ -9,6 +9,7 @@ using Sma.Stm.EventBus.Events;
 using Sma.Stm.Services.AuthorizationService.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Sma.Stm.Common.Swagger;
+using Sma.Stm.Ssc;
 
 namespace Sma.Stm.Services.AuthorizationService.Controllers
 {
@@ -18,11 +19,15 @@ namespace Sma.Stm.Services.AuthorizationService.Controllers
     {
         private readonly IEventBus _eventBus;
         private readonly AuthorizationDbContext _dbContext;
+        private readonly SeaSwimIdentityService _seaSwimIdentityService;
 
-        public AuthorizationController(AuthorizationDbContext dbCOntext, IEventBus eventBus)
+        public AuthorizationController(AuthorizationDbContext dbCOntext, 
+            IEventBus eventBus,
+            SeaSwimIdentityService seaSwimIdentityService)
         {
             _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
             _dbContext = dbCOntext ?? throw new ArgumentNullException(nameof(dbCOntext));
+            _seaSwimIdentityService = seaSwimIdentityService ?? throw new ArgumentNullException(nameof(seaSwimIdentityService));
         }
 
         [HttpGet]
@@ -58,10 +63,12 @@ namespace Sma.Stm.Services.AuthorizationService.Controllers
                 var response = new List<IdentityDescriptionObject>();
                 foreach (var item in acl)
                 {
+                    var orgName = _seaSwimIdentityService.GetIdentityName(item.OrgId);
+
                     response.Add(new IdentityDescriptionObject
                     {
                         IdentityId = item.OrgId,
-                        IdentityName = ""
+                        IdentityName = orgName
                     });
                 }
 
