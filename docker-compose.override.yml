@@ -9,60 +9,42 @@ services:
   sma.stm.services.genericmessageservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - EventBusConnection=${AZURE_SERVICE_BUS:-rabbitmq}
-      - EventBusUserName=${SERVICE_BUS_USERNAME}
-      - EventBusPassword=${SERVICE_BUS_PASSWORD}      
-      - AzureServiceBusEnabled=False
+      - EventBusConnection=rabbitmq
     ports:
       - "5001:80"
 
   sma.stm.services.authorizationservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - EventBusConnection=${AZURE_SERVICE_BUS:-rabbitmq}
-      - EventBusUserName=${SERVICE_BUS_USERNAME}
-      - EventBusPassword=${SERVICE_BUS_PASSWORD}      
-      - AzureServiceBusEnabled=False
+      - EventBusConnection=rabbitmq
     ports:
       - "5002:80"
 
   sma.stm.services.subscriptionservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - EventBusConnection=${AZURE_SERVICE_BUS:-rabbitmq}
-      - EventBusUserName=${SERVICE_BUS_USERNAME}
-      - EventBusPassword=${SERVICE_BUS_PASSWORD}      
-      - AzureServiceBusEnabled=False
+      - EventBusConnection=rabbitmq
     ports:
       - "5003:80"
 
   sma.stm.ssc.services.private:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - EventBusConnection=${AZURE_SERVICE_BUS:-rabbitmq}
-      - EventBusUserName=${SERVICE_BUS_USERNAME}
-      - EventBusPassword=${SERVICE_BUS_PASSWORD}      
-      - AzureServiceBusEnabled=False
+      - EventBusConnection=rabbitmq
     ports:
       - "5004:80"
 
   sma.stm.services.notificationservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - EventBusConnection=${AZURE_SERVICE_BUS:-rabbitmq}
-      - EventBusUserName=${SERVICE_BUS_USERNAME}
-      - EventBusPassword=${SERVICE_BUS_PASSWORD}      
-      - AzureServiceBusEnabled=False
+      - EventBusConnection=rabbitmq
     ports:
       - "5005:80"
 
   sma.stm.services.messagesenderservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - EventBusConnection=${AZURE_SERVICE_BUS:-rabbitmq}
-      - EventBusUserName=${SERVICE_BUS_USERNAME}
-      - EventBusPassword=${SERVICE_BUS_PASSWORD}      
-      - AzureServiceBusEnabled=False
+      - EventBusConnection=rabbitmq
   
   postgres:
     environment:

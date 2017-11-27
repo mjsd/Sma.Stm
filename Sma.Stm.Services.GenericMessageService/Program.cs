@@ -33,6 +33,5 @@ namespace Sma.Stm.Services.GenericMessageService
                     options.Listen(IPAddress.Any, 80);
                 })
                 .Build();
-
     }
 }
