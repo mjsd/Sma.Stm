@@ -128,10 +128,8 @@ namespace Sma.Stm.Services.GenericMessageService
                 app.UseDeveloperExceptionPage();
             }
 
-            using (var db = sp.GetRequiredService<GenericMessageDbContext>())
-            {
-                db.Database.MigrateAsync();
-            }
+            var db = sp.GetRequiredService<GenericMessageDbContext>();
+            db.Database.MigrateAsync();
 
             app.UseSeaSwimAuthentication(new object());
 

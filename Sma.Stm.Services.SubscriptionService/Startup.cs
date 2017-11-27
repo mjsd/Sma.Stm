@@ -121,10 +121,8 @@ namespace Sma.Stm.Services.SubscriptionService
                 app.UseDeveloperExceptionPage();
             }
 
-            using (var db = sp.GetRequiredService<SubscriptionDbContext>())
-            {
-                db.Database.MigrateAsync();
-            }
+            var db = sp.GetRequiredService<SubscriptionDbContext>();
+            db.Database.MigrateAsync();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();

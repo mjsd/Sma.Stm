@@ -25,6 +25,10 @@ namespace Sma.Stm.Services.GenericMessageService.DataAccess.EntityConfigurations
                 .IsRequired()
                 .HasMaxLength(250);
 
+            builder.Property(c => c.Status)
+                .IsRequired()
+                .HasMaxLength(250);
+
             builder.Property(c => c.PublishTime)
                 .IsRequired();
 

@@ -121,10 +121,8 @@ namespace Sma.Stm.Services.NotificationService
                 app.UseDeveloperExceptionPage();
             }
 
-            using (var db = sp.GetRequiredService<NotificationDbContext>())
-            {
-                db.Database.MigrateAsync();
-            }
+            var db = sp.GetRequiredService<NotificationDbContext>();
+            db.Database.MigrateAsync();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();

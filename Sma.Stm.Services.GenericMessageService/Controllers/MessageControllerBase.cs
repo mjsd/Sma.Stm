@@ -18,7 +18,7 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
     {
         protected IConfiguration _configuration;
 
-        public void Validate(string message, IHostingEnvironment env)
+        protected void Validate(string message, IHostingEnvironment env)
         {
             // Validate schema
             ValidateSchema(message, Path.Combine(env.ContentRootPath, @"Schema/"));
@@ -27,7 +27,7 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
             ExtendedValidation(message, Path.Combine(env.ContentRootPath, @"Plugins/"));
         }
 
-        public string GetDataId(string message)
+        protected string GetDataId(string message)
         {
             var dataIdXPath = _configuration.GetValue<string>("DataIdXPath");
             var parser = new XmlParser(message);
@@ -45,7 +45,7 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
             {
                 var sb = new StringBuilder();
                 foreach (var error in errors)
-                    sb.Append($"{error}\r\n");
+                    sb.Append($"{ error}\r\n");
 
                 throw new XmlException(sb.ToString());
             }

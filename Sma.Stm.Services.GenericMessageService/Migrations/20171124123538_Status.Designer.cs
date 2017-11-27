@@ -11,9 +11,10 @@ using System;
 namespace Sma.Stm.Services.GenericMessageService.Migrations
 {
     [DbContext(typeof(GenericMessageDbContext))]
-    partial class GenericMessageDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171124123538_Status")]
+    partial class Status
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

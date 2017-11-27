@@ -50,11 +50,23 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
         }
 
         [HttpGet("message")]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromQuery]string dataId, [FromQuery]string status)
         {
             try
             {
-                var items = await _dbContext.PublishedMessages.ToListAsync();
+                var query = _dbContext.PublishedMessages.Where(x => x.Id > 0);
+                if (!string.IsNullOrEmpty(dataId))
+                {
+                    query = query.Where(x => x.DataId == dataId);
+                }
+
+                if (!string.IsNullOrEmpty(status))
+                {
+                    query = query.Where(x => x.Status.ToLower() == status.ToLower());
+                }
+
+                var items = await query.ToListAsync();
+
                 var response = new GetVoyagePlanResponse
                 {
                     LastInteractionTime = DateTime.UtcNow,
@@ -84,7 +96,7 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
         }
 
         [HttpGet("message/{dataId}")]
-        public async Task<IActionResult> Get(string dataId)
+        public async Task<IActionResult> Get([FromQuery]string dataId)
         {
             try
             {
@@ -130,7 +142,20 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
                 var @event = new MessageUploadedIntegrationEvent
                 {
                 };
+
                 _eventBus.Publish(@event);
+
+                var @notificationEvent = new NotificationIntegrationEvent
+                {
+                    FromOrgId = _seaSwimInstanceContextService.CallerOrgId,
+                    FromOrgName = "",
+                    FromServiceId = _seaSwimInstanceContextService.CallerServiceId,
+                    NotificationCreatedAt = DateTime.UtcNow,
+                    NotificationType = EnumNotificationType.MESSAGE_WAITING,
+                    Subject = "New voyageplan uploaded.",
+                    NotificationSource = EnumNotificationSource.VIS,
+                };
+                _eventBus.Publish(@notificationEvent);
 
                 return Ok();
             }

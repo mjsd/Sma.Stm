@@ -62,24 +62,24 @@ namespace Sma.Stm.Services.SubscriptionService.Controllers
         }
 
         [HttpPost("subscription")]
-        public async Task<IActionResult> Post([FromQuery]string callbackEndpoint, [FromQuery]string uvid)
+        public async Task<IActionResult> Post([FromQuery]string callbackEndpoint, [FromQuery]string dataId)
         {
             try
             {
-                if (!AuthorizationService.CheckAuthentication(_seaSwimInstanceContextService.CallerOrgId, uvid))
+                if (!AuthorizationService.CheckAuthentication(_seaSwimInstanceContextService.CallerOrgId, dataId))
                 {
                     return Unauthorized();
                 }
 
                 var items = await _dbContext.Subscriptions.Where(x => 
-                    x.OrgId == _seaSwimInstanceContextService.CallerOrgId && x.DataId == uvid
+                    x.OrgId == _seaSwimInstanceContextService.CallerOrgId && x.DataId == dataId
                     && x.CallbackEndpoint.ToLower() == callbackEndpoint.ToLower()).ToListAsync();
 
                 if (items == null || items.Count() == 0)
                 {
                     _dbContext.Subscriptions.Add(new Models.SubscriptionItem
                     {
-                        DataId = uvid,
+                        DataId = dataId,
                         OrgId = _seaSwimInstanceContextService.CallerOrgId,
                         ServiceId = _seaSwimInstanceContextService.CallerServiceId,
                         CallbackEndpoint = callbackEndpoint
@@ -88,7 +88,7 @@ namespace Sma.Stm.Services.SubscriptionService.Controllers
                     var newEvent = new NewSubscriptionIntegrationEvent
                     {
                         CallbackEndpoint = callbackEndpoint,
-                        DataId = uvid,
+                        DataId = dataId,
                         OrgId = _seaSwimInstanceContextService.CallerOrgId,
                         ServiceId = _seaSwimInstanceContextService.CallerServiceId
                     };
@@ -97,7 +97,7 @@ namespace Sma.Stm.Services.SubscriptionService.Controllers
                 }
                 else
                 {
-                    return Ok($"Subscription for {_seaSwimInstanceContextService.CallerOrgId} on {uvid} already exists");
+                    return Ok($"Subscription for {_seaSwimInstanceContextService.CallerOrgId} on {dataId} already exists");
                 }
 
                 await _dbContext.SaveChangesAsync();
@@ -110,12 +110,12 @@ namespace Sma.Stm.Services.SubscriptionService.Controllers
         }
 
         [HttpDelete("subscription")]
-        public async Task<IActionResult> Delete([FromQuery]string callbackEndpoint, [FromQuery]string uvid)
+        public async Task<IActionResult> Delete([FromQuery]string callbackEndpoint, [FromQuery]string dataId)
         {
             try
             {
                 var item = await _dbContext.Subscriptions.FirstOrDefaultAsync(x =>
-                    x.OrgId == _seaSwimInstanceContextService.CallerOrgId && x.DataId == uvid
+                    x.OrgId == _seaSwimInstanceContextService.CallerOrgId && x.DataId == dataId
                     && x.CallbackEndpoint.ToLower() == callbackEndpoint.ToLower());
 
                 if (item == null)

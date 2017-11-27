@@ -12,6 +12,8 @@ namespace Sma.Stm.Services.GenericMessageService.Models
 
         public string DataId { get; set; }
 
+        public string Status { get; set; }
+
         public string Content { get; set; }
 
         public DateTime PublishTime { get; set; }

@@ -121,10 +121,8 @@ namespace Sma.Stm.Services.AuthorizationService
                 app.UseDeveloperExceptionPage();
             }
 
-            using (var db = sp.GetRequiredService<AuthorizationDbContext>())
-            {
-                db.Database.MigrateAsync();
-            }
+            var db = sp.GetRequiredService<AuthorizationDbContext>();
+            db.Database.MigrateAsync();
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
