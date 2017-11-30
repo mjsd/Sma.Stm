@@ -1,10 +1,6 @@
 using System;
-using System.Linq;
-using System.IO;
 using System.Text;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -19,30 +15,30 @@ namespace Sma.Stm.Services.GenericMessageService.Models
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageEnvelope" /> class.
         /// </summary>
-        /// <param name="NumberOfMessages">NumberOfMessages (required).</param>
-        /// <param name="RemainingNumberOfMessages">RemainingNumberOfMessages (required).</param>
-        /// <param name="Messages">Message.</param>
-        public MessageEnvelope(int? NumberOfMessages = null, int? RemainingNumberOfMessages = null, List<Message> Messages = null)
+        /// <param name="numberOfMessages">NumberOfMessages (required).</param>
+        /// <param name="remainingNumberOfMessages">RemainingNumberOfMessages (required).</param>
+        /// <param name="messages">Message.</param>
+        public MessageEnvelope(int? numberOfMessages = null, int? remainingNumberOfMessages = null, List<Message> messages = null)
         {
             // to ensure "NumberOfMessages" is required (not null)
-            if (NumberOfMessages == null)
+            if (numberOfMessages == null)
             {
                 //throw new InvalidDataException("NumberOfMessages is a required property for MessageEnvelope and cannot be null");
             }
             else
             {
-                this.NumberOfMessages = NumberOfMessages;
+                this.NumberOfMessages = numberOfMessages;
             }
             // to ensure "RemainingNumberOfMessages" is required (not null)
-            if (RemainingNumberOfMessages == null)
+            if (remainingNumberOfMessages == null)
             {
                 //throw new InvalidDataException("RemainingNumberOfMessages is a required property for MessageEnvelope and cannot be null");
             }
             else
             {
-                this.RemainingNumberOfMessages = RemainingNumberOfMessages;
+                this.RemainingNumberOfMessages = remainingNumberOfMessages;
             }
-            this.Messages = Messages;
+            this.Messages = messages;
             
         }
 
@@ -140,7 +136,7 @@ namespace Sma.Stm.Services.GenericMessageService.Models
             // credit: http://stackoverflow.com/a/263416/677735
             unchecked // Overflow is fine, just wrap
             {
-                int hash = 41;
+                var hash = 41;
                 // Suitable nullity checks etc, of course :)
                     if (this.NumberOfMessages != null)
                     hash = hash * 59 + this.NumberOfMessages.GetHashCode();

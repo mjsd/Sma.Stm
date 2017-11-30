@@ -1,10 +1,5 @@
 using System;
-using System.Linq;
-using System.IO;
 using System.Text;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -26,10 +21,10 @@ namespace Sma.Stm.Services.GenericMessageService.Models
         /// <summary>
         /// Initializes a new instance of the <see cref="VoyagePlan" /> class.
         /// </summary>
-        /// <param name="Route">Gets or Sets Route.</param>
-        public VoyagePlan(string Route = null)
+        /// <param name="route">Gets or Sets Route.</param>
+        public VoyagePlan(string route = null)
         {
-            this.Route = Route;
+            this.Route = route;
         }
 
         /// <summary>
@@ -102,7 +97,7 @@ namespace Sma.Stm.Services.GenericMessageService.Models
             // credit: http://stackoverflow.com/a/263416/677735
             unchecked // Overflow is fine, just wrap
             {
-                int hash = 41;
+                var hash = 41;
                 // Suitable nullity checks etc, of course :)
                     if (this.Route != null)
                     hash = hash * 59 + this.Route.GetHashCode();

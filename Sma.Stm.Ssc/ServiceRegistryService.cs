@@ -2,63 +2,76 @@
 using Sma.Stm.Common;
 using Sma.Stm.Common.Web;
 using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Net.Http;
 using System.Text;
 using System.Web;
+using Sma.Stm.Ssc.Contract;
 
 namespace Sma.Stm.Ssc
 {
     public class ServiceRegistryService : IServiceRegistryService
     {
-        private const string PATH_SEARCH_GENERIC = "/api/_search/serviceInstance?query=";
-        private const string PATH_SEARCH_GeoJSON = "/api/_searchGeometryGeoJSON/serviceInstance?geometry=[GEOMETRY]&query=";
-        private const string PATH_SEARCH_WKT = "/api/_searchGeometryWKT/serviceInstance?geometry=[GEOMETRY]&query=";
-        private const string PATH_ALL = "/api/serviceInstance";
+        private const string PathSearchGeneric = "/api/_search/serviceInstance?query=";
+        private const string PathSearchGeoJson = "/api/_searchGeometryGeoJSON/serviceInstance?geometry=[GEOMETRY]&query=";
+        private const string PathSearchWkt = "/api/_searchGeometryWKT/serviceInstance?geometry=[GEOMETRY]&query=";
+        private const string PathAll = "/api/serviceInstance";
 
-        private string serviceRegistryBasePath;
-        private IdentityRegistryService IdentityRegistryService;
+        private readonly string _serviceRegistryBasePath;
+        private IdentityRegistryService _identityRegistryService;
 
         public ServiceRegistryService(IConfiguration configuration)
         {
-            serviceRegistryBasePath = configuration.GetValue<string>("ServiceRegistryBaseUrl");
+            _serviceRegistryBasePath = configuration.GetValue<string>("ServiceRegistryBaseUrl");
         }
 
         public WebRequestHelper.WebResponse MakeGenericCall(string url, string method, string body = null, WebHeaderCollection headers = null)
         {
             WebRequestHelper.WebResponse response = null;
 
-            url = serviceRegistryBasePath + url;
-            if (method == "GET")
-                response = WebRequestHelper.Get(url, headers, false);
-            else if (method == "POST")
-                response = WebRequestHelper.Post(url, body, headers: headers, UseCertificate: false);
+            url = _serviceRegistryBasePath + url;
+            switch (method)
+            {
+                case "GET":
+                    response = WebRequestHelper.Get(url, headers, false);
+                    break;
+                case "POST":
+                    response = WebRequestHelper.Post(url, body, headers: headers, useCertificate: false);
+                    break;
+                default:
+                    throw new Exception($"Http method {method} not allowed");
+            }
 
             return response;
         }
 
         public WebRequestHelper.WebResponse FindServices(FindServicesRequestObj data)
         {
-            string url = string.Empty;
-            bool isGeoSearch = false;
+            var url = string.Empty;
+            var isGeoSearch = false;
 
             if (data.Filter.CoverageArea != null
                 && !string.IsNullOrEmpty(data.Filter.CoverageArea.Value))
             {
-                if (data.Filter.CoverageArea.CoverageType == "WKT")
-                    url = PATH_SEARCH_WKT.Replace("[GEOMETRY]", HttpUtility.UrlEncode(data.Filter.CoverageArea.Value));
-                if (data.Filter.CoverageArea.CoverageType == "GeoJSON")
-                    url = PATH_SEARCH_GeoJSON.Replace("[GEOMETRY]", HttpUtility.UrlEncode(data.Filter.CoverageArea.Value));
+                switch (data.Filter.CoverageArea.CoverageType)
+                {
+                    case "WKT":
+                        url = PathSearchWkt.Replace("[GEOMETRY]", HttpUtility.UrlEncode(data.Filter.CoverageArea.Value));
+                        break;
+                    case "GeoJSON":
+                        url = PathSearchGeoJson.Replace("[GEOMETRY]", HttpUtility.UrlEncode(data.Filter.CoverageArea.Value));
+                        break;
+                    default:
+                        throw new Exception($"Coverage area type {data.Filter.CoverageArea.CoverageType} is not valid");
+                }
 
                 isGeoSearch = true;
             }
             else
             {
-                url = PATH_SEARCH_GENERIC;
+                url = PathSearchGeneric;
             }
 
-            string query = string.Empty;
+            var query = string.Empty;
             if (!string.IsNullOrEmpty(data.Filter.FreeText))
             {
                 if (FormatValidator.IsValidFreeText(data.Filter.FreeText))
@@ -68,7 +81,7 @@ namespace Sma.Stm.Ssc
                 }
                 else
                 {
-                    string msg = "Forbidden character(s) in freetext search string.";
+                    const string msg = "Forbidden character(s) in freetext search string.";
                     throw new Exception(msg);
                 }
             }
@@ -168,12 +181,12 @@ namespace Sma.Stm.Ssc
 
             if (string.IsNullOrEmpty(query) && !isGeoSearch)
             {
-                url = PATH_ALL;
+                url = PathAll;
             }
 
             if (data.Page != null)
             {
-                if (url == PATH_ALL)
+                if (url == PathAll)
                     query += "?page=" + data.Page.ToString();
                 else
                     query += "&page=" + data.Page.ToString();
@@ -186,7 +199,7 @@ namespace Sma.Stm.Ssc
             return MakeGenericCall(url + query, "GET");
         }
 
-        private string AddToQuery(string query, string key, string value, string op)
+        private static string AddToQuery(string query, string key, string value, string op)
         {
             var sb = new StringBuilder(query);
             if (sb.Length > 0 && !query.EndsWith("("))

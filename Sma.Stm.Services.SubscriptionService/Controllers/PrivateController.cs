@@ -49,7 +49,7 @@ namespace Sma.Stm.Services.SubscriptionService.Controllers
                     {
                         IdentityId = item.OrgId,
                         IdentityName = orgName,
-                        EndpointURL = new Uri(item.CallbackEndpoint)
+                        EndpointUrl = new Uri(item.CallbackEndpoint)
                     });
                 }
 
@@ -77,7 +77,7 @@ namespace Sma.Stm.Services.SubscriptionService.Controllers
                 {
 
                     var subscription = await _dbContext.Subscriptions.FirstOrDefaultAsync(x =>
-                        x.DataId == dataId && x.OrgId == item.IdentityId && x.CallbackEndpoint == item.EndpointURL.ToString());
+                        x.DataId == dataId && x.OrgId == item.IdentityId && x.CallbackEndpoint == item.EndpointUrl.ToString());
 
                     if (subscription == null && AuthorizationService.CheckAuthentication(item.IdentityId, dataId))
                     {
@@ -86,7 +86,7 @@ namespace Sma.Stm.Services.SubscriptionService.Controllers
                             DataId = dataId,
                             OrgId = item.IdentityId,
                             ServiceId = "missing",
-                            CallbackEndpoint = item.EndpointURL.ToString()
+                            CallbackEndpoint = item.EndpointUrl.ToString()
                         };
 
                         _dbContext.Subscriptions.Add(subscription);

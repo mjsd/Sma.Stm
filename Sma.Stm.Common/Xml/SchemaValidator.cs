@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 
@@ -21,8 +20,6 @@ namespace Sma.Stm.Common.Xml
         {
             _validationErrors = null;
 
-            XmlReader xmlReader = null;
-
             if (_schemaSet == null)
             {
                 throw new Exception("There is no schema to validate against!");
@@ -37,11 +34,13 @@ namespace Sma.Stm.Common.Xml
                 xmlSettings.ValidationFlags = XmlSchemaValidationFlags.ReportValidationWarnings;
 
             xmlSettings.Schemas = _schemaSet;
-            xmlSettings.ValidationEventHandler += new
-                ValidationEventHandler(ValidationErrorHandler);
+            xmlSettings.ValidationEventHandler += ValidationErrorHandler;
 
-            xmlReader = XmlReader.Create(new StringReader(xmlToValidate), xmlSettings);
-            while (xmlReader.Read() && (_validationErrors == null || _validationErrors.Count < 5));
+            var xmlReader = XmlReader.Create(new StringReader(xmlToValidate), xmlSettings);
+            while (xmlReader.Read() && (_validationErrors == null || _validationErrors.Count < 5))
+            {
+                // Do nothing
+            }
 
             return _validationErrors;
         }
@@ -60,7 +59,7 @@ namespace Sma.Stm.Common.Xml
                 return;
 
             _schemaSet = new XmlSchemaSet();
-            foreach (XmlSchema schema in schemas)
+            foreach (var schema in schemas)
             {
                 _schemaSet.Add(schema);
             }

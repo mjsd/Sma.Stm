@@ -21,16 +21,12 @@
  */
 
 using System;
-using System.Linq;
 using System.IO;
-using System.Text;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
+using System.Text;
 using Newtonsoft.Json;
 
-namespace Sma.Stm.Ssc
+namespace Sma.Stm.Ssc.Contract
 {
     /// <summary>
     /// 
@@ -41,32 +37,32 @@ namespace Sma.Stm.Ssc
         /// <summary>
         /// Initializes a new instance of the <see cref="IdentityProviderAttribute" /> class.
         /// </summary>
-        /// <param name="AttributeName">OpenId Connect or SAML2 attribute name (required).</param>
-        /// <param name="AttributeValue">OpenId Connect or SAML2 attribute value (required).</param>
-        /// <param name="CreatedAt">CreatedAt.</param>
-        /// <param name="UpdatedAt">UpdatedAt.</param>
-        public IdentityProviderAttribute(string AttributeName = null, string AttributeValue = null, DateTime? CreatedAt = null, DateTime? UpdatedAt = null)
+        /// <param name="attributeName">OpenId Connect or SAML2 attribute name (required).</param>
+        /// <param name="attributeValue">OpenId Connect or SAML2 attribute value (required).</param>
+        /// <param name="createdAt">CreatedAt.</param>
+        /// <param name="updatedAt">UpdatedAt.</param>
+        public IdentityProviderAttribute(string attributeName = null, string attributeValue = null, DateTime? createdAt = null, DateTime? updatedAt = null)
         {
             // to ensure "AttributeName" is required (not null)
-            if (AttributeName == null)
+            if (attributeName == null)
             {
                 throw new InvalidDataException("AttributeName is a required property for IdentityProviderAttribute and cannot be null");
             }
             else
             {
-                this.AttributeName = AttributeName;
+                this.AttributeName = attributeName;
             }
             // to ensure "AttributeValue" is required (not null)
-            if (AttributeValue == null)
+            if (attributeValue == null)
             {
                 throw new InvalidDataException("AttributeValue is a required property for IdentityProviderAttribute and cannot be null");
             }
             else
             {
-                this.AttributeValue = AttributeValue;
+                this.AttributeValue = attributeValue;
             }
-            this.CreatedAt = CreatedAt;
-            this.UpdatedAt = UpdatedAt;
+            this.CreatedAt = createdAt;
+            this.UpdatedAt = updatedAt;
             
         }
 
@@ -178,7 +174,7 @@ namespace Sma.Stm.Ssc
             // credit: http://stackoverflow.com/a/263416/677735
             unchecked // Overflow is fine, just wrap
             {
-                int hash = 41;
+                var hash = 41;
                 // Suitable nullity checks etc, of course :)
                     if (this.AttributeName != null)
                     hash = hash * 59 + this.AttributeName.GetHashCode();

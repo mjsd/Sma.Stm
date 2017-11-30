@@ -1,10 +1,5 @@
 using System;
-using System.Linq;
-using System.IO;
 using System.Text;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -19,8 +14,6 @@ namespace Sma.Stm.Services.AuthorizationService.Models
         /// <summary>
         /// Initializes a new instance of the <see cref="IdentityDescriptionObject" /> class.
         /// </summary>
-        /// <param name="IdentityId">identity in urn format according to ID registry (required).</param>
-        /// <param name="IdentityName">Identity shortname in ID registry.</param>
         public IdentityDescriptionObject()
         {
         }
@@ -109,7 +102,7 @@ namespace Sma.Stm.Services.AuthorizationService.Models
             // credit: http://stackoverflow.com/a/263416/677735
             unchecked // Overflow is fine, just wrap
             {
-                int hash = 41;
+                var hash = 41;
                 // Suitable nullity checks etc, of course :)
                     if (this.IdentityId != null)
                     hash = hash * 59 + this.IdentityId.GetHashCode();

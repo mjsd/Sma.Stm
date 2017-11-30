@@ -1,14 +1,11 @@
 using System;
-using System.Linq;
-using System.IO;
-using System.Text;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Text;
 using Newtonsoft.Json;
 
-namespace Sma.Stm.Ssc
+namespace Sma.Stm.Ssc.Contract
 {
     /// <summary>
     /// 
@@ -19,16 +16,16 @@ namespace Sma.Stm.Ssc
         /// <summary>
         /// Initializes a new instance of the <see cref="CallServiceRequestObj" /> class.
         /// </summary>
-        /// <param name="Body">Body.</param>
-        /// <param name="EndpointMethod">EndpointMethod.</param>
-        /// <param name="Headers">Headers.</param>
-        /// <param name="RequestType">RequestType.</param>
-        public CallServiceRequestObj(string Body = null, string EndpointMethod = null, List<Header> Headers = null, string RequestType = null)
+        /// <param name="body">Body.</param>
+        /// <param name="endpointMethod">EndpointMethod.</param>
+        /// <param name="headers">Headers.</param>
+        /// <param name="requestType">RequestType.</param>
+        public CallServiceRequestObj(string body = null, string endpointMethod = null, List<Header> headers = null, string requestType = null)
         {
-            this.Body = Body;
-            this.EndpointMethod = EndpointMethod;
-            this.Headers = Headers;
-            this.RequestType = RequestType;
+            this.Body = body;
+            this.EndpointMethod = endpointMethod;
+            this.Headers = headers;
+            this.RequestType = requestType;
         }
 
         /// <summary>
@@ -137,7 +134,7 @@ namespace Sma.Stm.Ssc
             // credit: http://stackoverflow.com/a/263416/677735
             unchecked // Overflow is fine, just wrap
             {
-                int hash = 41;
+                var hash = 41;
                 // Suitable nullity checks etc, of course :)
                     if (this.Body != null)
                     hash = hash * 59 + this.Body.GetHashCode();

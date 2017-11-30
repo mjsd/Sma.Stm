@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Sma.Stm.Plugins.Rtz
+namespace Sma.Stm.Plugins.Rtz.Parser
 {
     public interface IRtzParser
     {

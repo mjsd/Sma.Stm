@@ -9,16 +9,12 @@
  */
 
 using System;
-using System.Linq;
 using System.IO;
-using System.Text;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
+using System.Text;
 using Newtonsoft.Json;
 
-namespace Sma.Stm.Ssc
+namespace Sma.Stm.Ssc.Contract
 {
     /// <summary>
     /// 
@@ -29,41 +25,41 @@ namespace Sma.Stm.Ssc
         /// <summary>
         /// Initializes a new instance of the <see cref="Organization" /> class.
         /// </summary>
-        /// <param name="Country">Country (required).</param>
-        /// <param name="Email">Email (required).</param>
-        /// <param name="Mrn">The Maritime Resource Name (required).</param>
-        /// <param name="Name">The name of the organization (required).</param>
-        public Organization(string Country = null, string Email = null, string Mrn = null, string Name = null)
+        /// <param name="country">Country (required).</param>
+        /// <param name="email">Email (required).</param>
+        /// <param name="mrn">The Maritime Resource Name (required).</param>
+        /// <param name="name">The name of the organization (required).</param>
+        public Organization(string country = null, string email = null, string mrn = null, string name = null)
         {
             // to ensure "Country" is required (not null)
-            if (Country == null)
+            if (country == null)
             {
                 throw new InvalidDataException("Country is a required property for Organization and cannot be null");
             }
             else
             {
-                this.Country = Country;
+                this.Country = country;
             }
 
-            this.Email = Email;
+            this.Email = email;
 
             // to ensure "Mrn" is required (not null)
-            if (Mrn == null)
+            if (mrn == null)
             {
                 throw new InvalidDataException("Mrn is a required property for Organization and cannot be null");
             }
             else
             {
-                this.Mrn = Mrn;
+                this.Mrn = mrn;
             }
             // to ensure "Name" is required (not null)
-            if (Name == null)
+            if (name == null)
             {
                 throw new InvalidDataException("Name is a required property for Organization and cannot be null");
             }
             else
             {
-                this.Name = Name;
+                this.Name = name;
             }
             
         }
@@ -176,7 +172,7 @@ namespace Sma.Stm.Ssc
             // credit: http://stackoverflow.com/a/263416/677735
             unchecked // Overflow is fine, just wrap
             {
-                int hash = 41;
+                var hash = 41;
                 // Suitable nullity checks etc, of course :)
                     if (this.Country != null)
                     hash = hash * 59 + this.Country.GetHashCode();

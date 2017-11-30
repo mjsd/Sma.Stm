@@ -9,12 +9,7 @@
  */
 
 using System;
-using System.Linq;
-using System.IO;
 using System.Text;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -29,20 +24,20 @@ namespace Sma.Stm.Services.GenericMessageService.Models
         /// <summary>
         /// Initializes a new instance of the <see cref="Message" /> class.
         /// </summary>
-        /// <param name="Id">Id.</param>
-        /// <param name="ReceivedAt">ReceivedAt.</param>
-        /// <param name="From">From.</param>
-        /// <param name="MessageType">MessageType.</param>
-        /// <param name="StmMessage">StmMessage.</param>
-        /// <param name="CallbackEndpoint"></param>
-        public Message(string Id = null, DateTime? ReceivedAt = null, string From = null, string MessageType = null, StmMessage StmMessage = null, string CallbackEndpoint = null)
+        /// <param name="id">Id.</param>
+        /// <param name="receivedAt">ReceivedAt.</param>
+        /// <param name="from">From.</param>
+        /// <param name="messageType">MessageType.</param>
+        /// <param name="stmMessage">StmMessage.</param>
+        /// <param name="callbackEndpoint"></param>
+        public Message(string id = null, DateTime? receivedAt = null, string @from = null, string messageType = null, StmMessage stmMessage = null, string callbackEndpoint = null)
         {
-            this.Id = Id;
-            this.ReceivedAt = ReceivedAt;
-            this.FromOrgId = From;
-            this.MessageType = MessageType;
-            this.StmMessage = StmMessage;
-            this.CallbackEndpoint = CallbackEndpoint;
+            this.Id = id;
+            this.ReceivedAt = receivedAt;
+            this.FromOrgId = @from;
+            this.MessageType = messageType;
+            this.StmMessage = stmMessage;
+            this.CallbackEndpoint = callbackEndpoint;
         }
 
         /// <summary>
@@ -192,7 +187,7 @@ namespace Sma.Stm.Services.GenericMessageService.Models
             // credit: http://stackoverflow.com/a/263416/677735
             unchecked // Overflow is fine, just wrap
             {
-                int hash = 41;
+                var hash = 41;
                 // Suitable nullity checks etc, of course :)
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();

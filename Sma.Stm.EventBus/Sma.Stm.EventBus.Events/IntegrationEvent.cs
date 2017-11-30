@@ -4,7 +4,7 @@ namespace Sma.Stm.EventBus.Events
 {
     public class IntegrationEvent
     {
-        public IntegrationEvent()
+        protected IntegrationEvent()
         {
             Id = Guid.NewGuid();
             CreationDate = DateTime.UtcNow;

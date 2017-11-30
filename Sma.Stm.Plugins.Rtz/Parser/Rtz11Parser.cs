@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Sma.Stm.Plugins.Rtz
+namespace Sma.Stm.Plugins.Rtz.Parser
 {
     public class Rtz11Parser : XmlParserBase, IRtzParser
     {
@@ -16,37 +13,17 @@ namespace Sma.Stm.Plugins.Rtz
             });
         }
 
-        public string RouteStatus
-        {
-            get
-            {
-                return GetValue(@"//rtz:route/rtz:routeInfo/rtz:extensions/rtz:extension/@routeStatusEnum");
-            }
-        }
+        public string RouteStatus => 
+            GetValue(@"//rtz:route/rtz:routeInfo/rtz:extensions/rtz:extension/@routeStatusEnum");
 
-        public string RouteInfo
-        {
-            get
-            {
-                return GetXml("//rtz:routeInfo");
-            }
-        }
+        public string RouteInfo => 
+            GetXml("//rtz:routeInfo");
 
-        public string WayPoints
-        {
-            get
-            {
-                return GetXml("//rtz:waypoints");
-            }
-        }
+        public string WayPoints => 
+            GetXml("//rtz:waypoints");
 
-        public string VesselVoyage
-        {
-            get
-            {
-                return GetValue("//rtz:route//rtz:routeInfo/@vesselVoyage");
-            }
-        }
+        public string VesselVoyage => 
+            GetValue("//rtz:route//rtz:routeInfo/@vesselVoyage");
 
         public DateTime? ValidityPeriodStart
         {
@@ -74,27 +51,12 @@ namespace Sma.Stm.Plugins.Rtz
             }
         }
 
-        public string StmRouteInfoExtension
-        {
-            get
-            {
-                return GetXml(@"//rtz:route/rtz:routeInfo/rtz:extensions/rtz:extension[@manufacturer='STM']");
-            }
-        }
+        public string StmRouteInfoExtension => GetXml(@"//rtz:route/rtz:routeInfo/rtz:extensions/rtz:extension[@manufacturer='STM']");
 
-        public string DeparturePort
-        {
-            get
-            {
-                return GetValue(@"//rtz:route/rtz:routeInfo/rtz:extensions/rtz:extension/@depPort");
-            }
-        }
-        public string ArrivalPort
-        {
-            get
-            {
-                return GetValue(@"//rtz:route/rtz:routeInfo/rtz:extensions/rtz:extension/@arrPort");
-            }
-        }
+        public string DeparturePort => 
+            GetValue(@"//rtz:route/rtz:routeInfo/rtz:extensions/rtz:extension/@depPort");
+
+        public string ArrivalPort => 
+            GetValue(@"//rtz:route/rtz:routeInfo/rtz:extensions/rtz:extension/@arrPort");
     }
 }

@@ -1,9 +1,9 @@
-﻿using RabbitMQ.Client;
-using System;
+﻿using System;
+using RabbitMQ.Client;
 
-namespace Sma.Stm.EventBus.RabbitMQ
+namespace Sma.Stm.EventBusRabbitMq
 {
-    public interface IRabbitMQPersistentConnection
+    public interface IRabbitMqPersistentConnection
         : IDisposable
     {
         bool IsConnected { get; }

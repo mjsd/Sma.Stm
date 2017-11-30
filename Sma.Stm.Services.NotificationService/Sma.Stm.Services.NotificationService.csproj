@@ -20,15 +20,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Sma.Stm.Common\Sma.Stm.Common.csproj" />
-    <ProjectReference Include="..\Sma.Stm.EventBus\Sma.Stm.EventBus.Events\Sma.Stm.EventBus.Events.csproj" />
-    <ProjectReference Include="..\Sma.Stm.EventBus\Sma.Stm.EventBusRabbitMQ\Sma.Stm.EventBusRabbitMQ.csproj" />
-    <ProjectReference Include="..\Sma.Stm.EventBus\Sma.Stm.EventBusServiceBus\Sma.Stm.EventBusServiceBus.csproj" />
-    <ProjectReference Include="..\Sma.Stm.EventBus\Sma.Stm.EventBus\Sma.Stm.EventBus.csproj" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Migrations\" />
+    <ProjectReference Include="..\Sma.Stm.Common\Sma.Stm.Common.csproj" />
+    <ProjectReference Include="..\Sma.Stm.EventBus\Sma.Stm.EventBus.Events\Sma.Stm.EventBus.Events.csproj" />
+    <ProjectReference Include="..\Sma.Stm.EventBus\Sma.Stm.EventBusRabbitMQ\Sma.Stm.EventBusRabbitMQ.csproj" />
+    <ProjectReference Include="..\Sma.Stm.EventBus\Sma.Stm.EventBus\Sma.Stm.EventBus.csproj" />
   </ItemGroup>
 
 </Project>

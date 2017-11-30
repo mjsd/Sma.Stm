@@ -1,10 +1,5 @@
-﻿using Swashbuckle.AspNetCore;
-using Swashbuckle.AspNetCore.Swagger;
+﻿using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 
 namespace Sma.Stm.Common.Swagger
@@ -15,13 +10,13 @@ namespace Sma.Stm.Common.Swagger
         {
             var requestAttributes = context.ApiDescription.ActionAttributes().OfType<SwaggerRequestContentTypeAttribute>().FirstOrDefault();
 
-            if (requestAttributes != null)
-            {
-                if (requestAttributes.Exclusive)
-                    operation.Consumes.Clear();
+            if (requestAttributes == null)
+                return;
 
-                operation.Consumes.Add(requestAttributes.RequestType);
-            }
+            if (requestAttributes.Exclusive)
+                operation.Consumes.Clear();
+
+            operation.Consumes.Add(requestAttributes.RequestType);
         }
     }
 }

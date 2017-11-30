@@ -1,13 +1,11 @@
-﻿using Sma.Stm.Common.Web;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Sma.Stm.EventBus.Abstractions;
 using Sma.Stm.EventBus.Events;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
+using Sma.Stm.Services.MessageSenderService.Services;
+using Sma.Stm.Ssc.Contract;
 
-namespace Sma.Stm.Services.GenericMessageService.IntegrationEvents.EventHandling
+namespace Sma.Stm.Services.MessageSenderService.IntegrationEvents.EventHandling
 {
     public class SendMessageIntegrationEvenHandler : IIntegrationEventHandler<SendMessageIntegrationEven>
     {
@@ -17,16 +15,16 @@ namespace Sma.Stm.Services.GenericMessageService.IntegrationEvents.EventHandling
 
         public async Task Handle(SendMessageIntegrationEven @event)
         {
-            List<Ssc.Header> headers = null;
+            List<Header> headers = null;
             if (!string.IsNullOrEmpty(@event.ContentType))
             {
-                headers = new List<Ssc.Header>
+                headers = new List<Header>
                 {
-                    new Ssc.Header { Key = "Content-type", Value = @event.ContentType}
+                    new Header { Key = "Content-type", Value = @event.ContentType}
                 };
             }
 
-            Services.SeaSwimService.CallService(@event.Body, @event.Url.ToString(), @event.HttpMethod, headers);
+            SeaSwimService.CallService(@event.Body, @event.Url.ToString(), @event.HttpMethod, headers);
             await Task.FromResult(0);
         }
     }

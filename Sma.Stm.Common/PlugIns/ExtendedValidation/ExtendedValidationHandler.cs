@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Sma.Stm.Common.PlugIns.ExtendedValidation
 {
     public class ExtendedValidationHandler
     {
-        private PluginLoader<IExtendedValidator> _pluginsLoader;
+        private readonly PluginLoader<IExtendedValidator> _pluginsLoader;
 
         public ExtendedValidationHandler (string pluginPath)
         {

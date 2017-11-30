@@ -1,5 +1,4 @@
 ﻿using Sma.Stm.EventBus.Events;
-using System;
 
 namespace Sma.Stm.EventBus.Abstractions
 {

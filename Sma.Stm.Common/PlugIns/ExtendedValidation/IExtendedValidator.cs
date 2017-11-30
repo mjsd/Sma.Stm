@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Sma.Stm.Common.PlugIns.ExtendedValidation
 {
     public interface IExtendedValidator
     {
-        List<string> Validate(string xml);
+        IEnumerable<string> Validate(string xml);
     }
 }

@@ -1,12 +1,9 @@
-﻿using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Sma.Stm.Common.Web;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
+using Sma.Stm.Ssc.Contract;
 
 namespace Sma.Stm.Ssc
 {
@@ -28,7 +25,7 @@ namespace Sma.Stm.Ssc
 
             var url = data.EndpointMethod;
 
-            string headers = string.Empty;
+            var headers = string.Empty;
             var headerCollection = new WebHeaderCollection();
             if (data.Headers != null)
             {
@@ -42,16 +39,23 @@ namespace Sma.Stm.Ssc
 
             WebRequestHelper.WebResponse response = null;
 
-            if (data.RequestType == "GET")
-                response = WebRequestHelper.Get(url, headerCollection, true);
-            else if (data.RequestType == "POST")
-                response = WebRequestHelper.Post(url, data.Body, headerCollection, true);
-            else if (data.RequestType == "DELETE")
-                response = WebRequestHelper.Delete(url, data.Body, headerCollection, true);
-            else if (data.RequestType == "PUT")
-                response = WebRequestHelper.Put(url, data.Body, headerCollection, true);
-            else
-                throw new Exception(string.Format("The request type {0} is not supported.", data.RequestType));
+            switch (data.RequestType)
+            {
+                case "GET":
+                    response = WebRequestHelper.Get(url, headerCollection, true);
+                    break;
+                case "POST":
+                    response = WebRequestHelper.Post(url, data.Body, headerCollection, true);
+                    break;
+                case "DELETE":
+                    response = WebRequestHelper.Delete(url, data.Body, headerCollection, true);
+                    break;
+                case "PUT":
+                    response = WebRequestHelper.Put(url, data.Body, headerCollection, true);
+                    break;
+                default:
+                    throw new Exception($"The http method {data.RequestType} is not supported.");
+            }
 
             result.Body = response.Body;
             result.StatusCode = (int)response.HttpStatusCode;
@@ -64,18 +68,17 @@ namespace Sma.Stm.Ssc
 
             try
             {
-                var url = "/orgs?page=0&size=1000";
+                const string url = "/orgs?page=0&size=1000";
 
                 var response = _identityRegistryService.MakeGenericCall(url, "GET");
-                if (response.HttpStatusCode == HttpStatusCode.OK
-                    && !string.IsNullOrEmpty(response.Body)
-                    && response.Body.Length > 35)
-                {
-                    var responseObj = JsonConvert.DeserializeObject<IdRegistryResponeObject>(response.Body);
-                    result.Organizations = responseObj.content;
-                    result.StatusMessage = response.ErrorMessage;
-                    result.StatusCode = (int)response.HttpStatusCode;
-                }
+                if (response.HttpStatusCode != HttpStatusCode.OK || string.IsNullOrEmpty(response.Body) ||
+                    response.Body.Length <= 35)
+                    return result;
+
+                var responseObj = JsonConvert.DeserializeObject<IdRegistryResponeObject>(response.Body);
+                result.Organizations = responseObj.Content;
+                result.StatusMessage = response.ErrorMessage;
+                result.StatusCode = (int)response.HttpStatusCode;
 
                 return result;
             }
@@ -89,7 +92,7 @@ namespace Sma.Stm.Ssc
         {
             if (request == null)
             {
-                string msg = "Invalid request.";
+                const string msg = "Invalid request.";
                 throw new Exception(msg);
             }
 

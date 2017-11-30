@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Sma.Stm.Services.NotificationService.Models
 {
@@ -32,16 +29,16 @@ namespace Sma.Stm.Services.NotificationService.Models
 
     public enum EnumNotificationType : int
     {
-        MESSAGE_WAITING = 1,
-        UNAUTHORIZED_REQUEST = 2,
-        ACKNOWLEDGEMENT_RECEIVED = 3,
-        ERROR_MESSAGE = 4
+        MessageWaiting = 1,
+        UnauthorizedRequest = 2,
+        AcknowledgementReceived = 3,
+        ErrorMessage = 4
 
     }
 
     public enum EnumNotificationSource
     {
-        VIS = 1,
-        SPIS = 2,
+        Vis = 1,
+        Spis = 2,
     }
 }

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sma.Stm.Services.GenericMessageService.Models
 {
@@ -20,7 +16,7 @@ namespace Sma.Stm.Services.GenericMessageService.Models
         /// Identity of the message (extracted from the message). In case of voyage plan
         /// it's the UVID.
         /// </summary>
-        public string MessageID { get; set; }
+        public string MessageId { get; set; }
 
         /// <summary>
         /// Time of update of the message (extracted from the message)

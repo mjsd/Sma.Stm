@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -25,7 +24,6 @@ namespace Sma.Stm.Common.Web
             try
             {
                 var request = context.HttpContext.Request;
-                var contentType = context.HttpContext.Request.ContentType;
 
                 using (var reader = new StreamReader(request.Body))
                 {
@@ -33,7 +31,7 @@ namespace Sma.Stm.Common.Web
                     return await InputFormatterResult.SuccessAsync(content);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return await InputFormatterResult.FailureAsync();
             }

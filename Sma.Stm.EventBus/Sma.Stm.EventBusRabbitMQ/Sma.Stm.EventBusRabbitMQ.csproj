@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <RootNamespace>Microsoft.eShopOnContainers.BuildingBlocks.EventBusRabbitMQ</RootNamespace>
+    <RootNamespace>Sma.Stm.EventBusRabbitMQ</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

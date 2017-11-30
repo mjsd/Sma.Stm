@@ -1,11 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Sma.Stm.Services.GenericMessageService.Models
 {
@@ -24,87 +21,87 @@ namespace Sma.Stm.Services.GenericMessageService.Models
         /// <summary>
         /// Initializes a new instance of the <see cref="DeliveryAck" /> class.
         /// </summary>
-        /// <param name="Id">Id for the ACK (required).</param>
-        /// <param name="ReferenceId">Reference to delivered message (URN) (required).</param>
-        /// <param name="TimeOfDelivery">Time of delivery (required).</param>
-        /// <param name="FromId">Identity of source (sender) of message that have been delivered (URN) (required).</param>
-        /// <param name="FromName">Friendly name of sender (required).</param>
-        /// <param name="ToId">Identity of target (recipient) of message delivery (URN) (required).</param>
-        /// <param name="ToName">Friendly name of recipient (required).</param>
-        /// <param name="AckResult">AckResult (required).</param>
-        public DeliveryAck(string Id = null, string ReferenceId = null, DateTime? TimeOfDelivery = null, string FromId = null, string FromName = null, string ToId = null, string ToName = null, string AckResult = null)
+        /// <param name="id">Id for the ACK (required).</param>
+        /// <param name="referenceId">Reference to delivered message (URN) (required).</param>
+        /// <param name="timeOfDelivery">Time of delivery (required).</param>
+        /// <param name="fromId">Identity of source (sender) of message that have been delivered (URN) (required).</param>
+        /// <param name="fromName">Friendly name of sender (required).</param>
+        /// <param name="toId">Identity of target (recipient) of message delivery (URN) (required).</param>
+        /// <param name="toName">Friendly name of recipient (required).</param>
+        /// <param name="ackResult">AckResult (required).</param>
+        public DeliveryAck(string id = null, string referenceId = null, DateTime? timeOfDelivery = null, string fromId = null, string fromName = null, string toId = null, string toName = null, string ackResult = null)
         {
             // to ensure "Id" is required (not null)
-            if (Id == null)
+            if (id == null)
             {
                 throw new InvalidDataException("Id is a required property for DeliveryAck and cannot be null");
             }
             else
             {
-                this.Id = Id;
+                this.Id = id;
             }
             // to ensure "ReferenceId" is required (not null)
-            if (ReferenceId == null)
+            if (referenceId == null)
             {
                 throw new InvalidDataException("ReferenceId is a required property for DeliveryAck and cannot be null");
             }
             else
             {
-                this.ReferenceId = ReferenceId;
+                this.ReferenceId = referenceId;
             }
             // to ensure "TimeOfDelivery" is required (not null)
-            if (TimeOfDelivery == null)
+            if (timeOfDelivery == null)
             {
                 throw new InvalidDataException("TimeOfDelivery is a required property for DeliveryAck and cannot be null");
             }
             else
             {
-                this.TimeOfDelivery = TimeOfDelivery;
+                this.TimeOfDelivery = timeOfDelivery;
             }
             // to ensure "FromId" is required (not null)
-            if (FromId == null)
+            if (fromId == null)
             {
                 throw new InvalidDataException("FromId is a required property for DeliveryAck and cannot be null");
             }
             else
             {
-                this.FromId = FromId;
+                this.FromId = fromId;
             }
             // to ensure "FromName" is required (not null)
-            if (FromName == null)
+            if (fromName == null)
             {
                 throw new InvalidDataException("FromName is a required property for DeliveryAck and cannot be null");
             }
             else
             {
-                this.FromName = FromName;
+                this.FromName = fromName;
             }
             // to ensure "ToId" is required (not null)
-            if (ToId == null)
+            if (toId == null)
             {
                 throw new InvalidDataException("ToId is a required property for DeliveryAck and cannot be null");
             }
             else
             {
-                this.ToId = ToId;
+                this.ToId = toId;
             }
             // to ensure "ToName" is required (not null)
-            if (ToName == null)
+            if (toName == null)
             {
                 throw new InvalidDataException("ToName is a required property for DeliveryAck and cannot be null");
             }
             else
             {
-                this.ToName = ToName;
+                this.ToName = toName;
             }
             // to ensure "AckResult" is required (not null)
-            if (AckResult == null)
+            if (ackResult == null)
             {
                 throw new InvalidDataException("AckResult is a required property for DeliveryAck and cannot be null");
             }
             else
             {
-                this.AckResult = AckResult;
+                this.AckResult = ackResult;
             }
 
         }
@@ -263,7 +260,7 @@ namespace Sma.Stm.Services.GenericMessageService.Models
             // credit: http://stackoverflow.com/a/263416/677735
             unchecked // Overflow is fine, just wrap
             {
-                int hash = 41;
+                var hash = 41;
                 // Suitable nullity checks etc, of course :)
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();

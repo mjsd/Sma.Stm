@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace Sma.Stm.Ssc
+namespace Sma.Stm.Ssc.Contract
 {
     public class IdRegistryResponeObject
     {
-        public List<Organization> content { get; set; }
-        public bool last { get; set; }
-        public int totalPages { get; set; }
-        public int totalElements { get; set; }
-        public int numberOfElements { get; set; }
-        public bool first { get; set; }
-        public object sort { get; set; }
-        public int size { get; set; }
-        public int number { get; set; }
+        public List<Organization> Content { get; set; }
+        public bool Last { get; set; }
+        public int TotalPages { get; set; }
+        public int TotalElements { get; set; }
+        public int NumberOfElements { get; set; }
+        public bool First { get; set; }
+        public object Sort { get; set; }
+        public int Size { get; set; }
+        public int Number { get; set; }
     }
 }

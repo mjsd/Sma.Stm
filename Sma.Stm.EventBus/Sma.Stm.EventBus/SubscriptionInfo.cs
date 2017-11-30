@@ -2,7 +2,7 @@
 
 namespace Sma.Stm.EventBus
 {
-    public partial class InMemoryEventBusSubscriptionsManager : IEventBusSubscriptionsManager
+    public partial class InMemoryEventBusSubscriptionsManager
     {
         public class SubscriptionInfo
         {

@@ -9,16 +9,13 @@
  */
 
 using System;
-using System.Linq;
-using System.IO;
-using System.Text;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Text;
 using Newtonsoft.Json;
 
-namespace Sma.Stm.Ssc
+namespace Sma.Stm.Ssc.Contract
 {
     /// <summary>
     /// 
@@ -29,30 +26,30 @@ namespace Sma.Stm.Ssc
         /// <summary>
         /// Initializes a new instance of the <see cref="FindServicesRequestObjFilter" /> class.
         /// </summary>
-        /// <param name="CoverageArea">CoverageArea.</param>
-        /// <param name="UnLoCode">UnLoCode.</param>
-        /// <param name="ServiceProviderIds">ServiceProviderIds.</param>
-        /// <param name="ServiceDesignId">ServiceDesignId.</param>
-        /// <param name="ServiceInstanceId">ServiceInstanceId.</param>
-        /// <param name="Mmsi">Mmsi.</param>
-        /// <param name="Imo">Imo.</param>
-        /// <param name="ServiceType">ServiceType.</param>
-        /// <param name="ServiceStatus">ServiceStatus.</param>
-        /// <param name="KeyWords">KeyWords.</param>
-        /// <param name="FreeText">FreeText.</param>
-        public FindServicesRequestObjFilter(FindServicesRequestObjFilterCoverageArea CoverageArea = null, string UnLoCode = null, List<string> ServiceProviderIds = null, string ServiceDesignId = null, string ServiceInstanceId = null, string Mmsi = null, string Imo = null, string ServiceType = null, string ServiceStatus = null, List<string> KeyWords = null, string FreeText = null)
+        /// <param name="coverageArea">CoverageArea.</param>
+        /// <param name="unLoCode">UnLoCode.</param>
+        /// <param name="serviceProviderIds">ServiceProviderIds.</param>
+        /// <param name="serviceDesignId">ServiceDesignId.</param>
+        /// <param name="serviceInstanceId">ServiceInstanceId.</param>
+        /// <param name="mmsi">Mmsi.</param>
+        /// <param name="imo">Imo.</param>
+        /// <param name="serviceType">ServiceType.</param>
+        /// <param name="serviceStatus">ServiceStatus.</param>
+        /// <param name="keyWords">KeyWords.</param>
+        /// <param name="freeText">FreeText.</param>
+        public FindServicesRequestObjFilter(FindServicesRequestObjFilterCoverageArea coverageArea = null, string unLoCode = null, List<string> serviceProviderIds = null, string serviceDesignId = null, string serviceInstanceId = null, string mmsi = null, string imo = null, string serviceType = null, string serviceStatus = null, List<string> keyWords = null, string freeText = null)
         {
-            this.CoverageArea = CoverageArea;
-            this.UnLoCode = UnLoCode;
-            this.ServiceProviderIds = ServiceProviderIds;
-            this.ServiceDesignId = ServiceDesignId;
-            this.ServiceInstanceId = ServiceInstanceId;
-            this.Mmsi = Mmsi;
-            this.Imo = Imo;
-            this.ServiceType = ServiceType;
-            this.ServiceStatus = ServiceStatus;
-            this.KeyWords = KeyWords;
-            this.FreeText = FreeText;
+            this.CoverageArea = coverageArea;
+            this.UnLoCode = unLoCode;
+            this.ServiceProviderIds = serviceProviderIds;
+            this.ServiceDesignId = serviceDesignId;
+            this.ServiceInstanceId = serviceInstanceId;
+            this.Mmsi = mmsi;
+            this.Imo = imo;
+            this.ServiceType = serviceType;
+            this.ServiceStatus = serviceStatus;
+            this.KeyWords = keyWords;
+            this.FreeText = freeText;
         }
 
         /// <summary>
@@ -245,7 +242,7 @@ namespace Sma.Stm.Ssc
             // credit: http://stackoverflow.com/a/263416/677735
             unchecked // Overflow is fine, just wrap
             {
-                int hash = 41;
+                var hash = 41;
                 // Suitable nullity checks etc, of course :)
                     if (this.CoverageArea != null)
                     hash = hash * 59 + this.CoverageArea.GetHashCode();

@@ -43,7 +43,7 @@ namespace Sma.Stm.Services.SubscriptionService.Controllers
                     x.OrgId == _seaSwimInstanceContextService.CallerOrgId 
                     && x.CallbackEndpoint.ToLower() == callbackEndpoint.ToLower()).ToListAsync();
 
-                if (items.Count() == 0)
+                if (!items.Any())
                     return NotFound();
 
                 var response = new List<GetSubscriptionResponseObj>();
@@ -78,9 +78,9 @@ namespace Sma.Stm.Services.SubscriptionService.Controllers
                         FromOrgName = orgName,
                         FromServiceId = _seaSwimInstanceContextService.CallerServiceId,
                         NotificationCreatedAt = DateTime.UtcNow,
-                        NotificationType = EnumNotificationType.UNAUTHORIZED_REQUEST,
+                        NotificationType = EnumNotificationType.UnauthorizedRequest,
                         Subject = "Unauthorized subscription request",
-                        NotificationSource = EnumNotificationSource.VIS,
+                        NotificationSource = EnumNotificationSource.Vis,
                         Body = $"Organization {orgName} {_seaSwimInstanceContextService.CallerOrgId} is not authorized to {dataId}"
                     };
                     _eventBus.Publish(@event);
@@ -90,9 +90,9 @@ namespace Sma.Stm.Services.SubscriptionService.Controllers
 
                 var items = await _dbContext.Subscriptions.Where(x => 
                     x.OrgId == _seaSwimInstanceContextService.CallerOrgId && x.DataId == dataId
-                    && x.CallbackEndpoint.ToLower() == callbackEndpoint.ToLower()).ToListAsync();
+                    && string.Equals(x.CallbackEndpoint, callbackEndpoint, StringComparison.CurrentCultureIgnoreCase)).ToListAsync();
 
-                if (items == null || items.Count() == 0)
+                if (items == null || !items.Any())
                 {
                     _dbContext.Subscriptions.Add(new Models.SubscriptionItem
                     {
@@ -133,7 +133,7 @@ namespace Sma.Stm.Services.SubscriptionService.Controllers
             {
                 var item = await _dbContext.Subscriptions.FirstOrDefaultAsync(x =>
                     x.OrgId == _seaSwimInstanceContextService.CallerOrgId && x.DataId == dataId
-                    && x.CallbackEndpoint.ToLower() == callbackEndpoint.ToLower());
+                    && string.Equals(x.CallbackEndpoint, callbackEndpoint, StringComparison.CurrentCultureIgnoreCase));
 
                 if (item == null)
                 {

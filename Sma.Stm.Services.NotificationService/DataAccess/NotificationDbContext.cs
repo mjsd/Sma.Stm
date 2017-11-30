@@ -1,8 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Sma.Stm.Services.NotificationService.Models;
 using Sma.Stm.Services.AuthorizationService.DataAccess.EntityConfigurations;
 using Microsoft.EntityFrameworkCore.Design;
@@ -11,7 +7,7 @@ namespace Sma.Stm.Services.AuthorizationService.DataAccess
 {
     public class NotificationDbContext : DbContext
     {
-        public NotificationDbContext(DbContextOptions<NotificationDbContext> options) : base(options)
+        public NotificationDbContext(DbContextOptions options) : base(options)
         {
         }
 

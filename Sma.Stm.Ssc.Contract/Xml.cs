@@ -9,16 +9,11 @@
  */
 
 using System;
-using System.Linq;
-using System.IO;
-using System.Text;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
+using System.Text;
 using Newtonsoft.Json;
 
-namespace Sma.Stm.Ssc
+namespace Sma.Stm.Ssc.Contract
 {
     /// <summary>
     /// A technical way to describe aspects if a service.The Xml should validate against a XSD from a SpecificationTemplate.
@@ -29,18 +24,18 @@ namespace Sma.Stm.Ssc
         /// <summary>
         /// Initializes a new instance of the <see cref="Xml" /> class.
         /// </summary>
-        /// <param name="Comment">Comment.</param>
-        /// <param name="Content">Content.</param>
-        /// <param name="ContentContentType">ContentContentType.</param>
-        /// <param name="Id">Id.</param>
-        /// <param name="Name">Name.</param>
-        public Xml(string Comment = null, string Content = null, string ContentContentType = null, long? Id = null, string Name = null)
+        /// <param name="comment">Comment.</param>
+        /// <param name="content">Content.</param>
+        /// <param name="contentContentType">ContentContentType.</param>
+        /// <param name="id">Id.</param>
+        /// <param name="name">Name.</param>
+        public Xml(string comment = null, string content = null, string contentContentType = null, long? id = null, string name = null)
         {
-            this.Comment = Comment;
-            this.Content = Content;
-            this.ContentContentType = ContentContentType;
-            this.Id = Id;
-            this.Name = Name;
+            this.Comment = comment;
+            this.Content = content;
+            this.ContentContentType = contentContentType;
+            this.Id = id;
+            this.Name = name;
             
         }
 
@@ -162,7 +157,7 @@ namespace Sma.Stm.Ssc
             // credit: http://stackoverflow.com/a/263416/677735
             unchecked // Overflow is fine, just wrap
             {
-                int hash = 41;
+                var hash = 41;
                 // Suitable nullity checks etc, of course :)
                     if (this.Comment != null)
                     hash = hash * 59 + this.Comment.GetHashCode();

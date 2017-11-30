@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Sma.Stm.Common.Web;
+﻿using Sma.Stm.Common.Web;
 using System.Net;
+using Sma.Stm.Ssc.Contract;
 
 namespace Sma.Stm.Ssc
 {

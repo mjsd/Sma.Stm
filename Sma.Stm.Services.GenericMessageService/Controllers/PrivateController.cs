@@ -5,13 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Sma.Stm.Services.GenericMessageService.Models;
 using System.Net;
-using Sma.Stm.Common.Xml;
-using System.Xml.Schema;
-using System.IO;
 using Sma.Stm.EventBus.Abstractions;
-using Sma.Stm.Services.GenericMessageService.IntegrationEvents.EventHandling;
-using System.Xml;
-using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Sma.Stm.EventBus.Events;
@@ -42,7 +36,7 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
             _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
             _hostingEnvironment = hostingEnvironment ?? throw new ArgumentNullException(nameof(hostingEnvironment));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
         [HttpGet("uploadedMessage")]
@@ -58,7 +52,7 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
                     RemainingNumberOfMessages = 0
                 };
 
-                var items = new List<UploadedMessage>();
+                List<UploadedMessage> items;
                 if (limitQuery == null)
                 {
                     items = await _dbContext.UploadedMessages
@@ -107,7 +101,7 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
                         var newEvent = new SendMessageIntegrationEven
                         {
                             Body = JsonConvert.SerializeObject(ack),
-                            ContentType = Constants.CONTENT_TYPE_APPLICATION_JSON,
+                            ContentType = Constants.ContentTypeApplicationJson,
                             Url = new Uri("https://161.54.241.174:8080/acknowledgement"),
                             HttpMethod = "POST",
                             SenderOrgId = "",
@@ -143,7 +137,7 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
                     response.Add(new PublishedMessageContract
                     {
                         Message = item.Content,
-                        MessageID = item.DataId,
+                        MessageId = item.DataId,
                         MessageLastUpdateTime = DateTime.UtcNow,
                         MessageStatus = 7,
                         MessageType = "RTZ",

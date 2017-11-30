@@ -1,9 +1,7 @@
 ﻿using Sma.Stm.EventBus.Abstractions;
 using Sma.Stm.EventBus.Events;
 using Sma.Stm.Services.SubscriptionService.DataAccess;
-using Sma.Stm.Services.SubscriptionService.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -34,7 +32,7 @@ namespace Sma.Stm.Services.SubscriptionService.IntegrationEvents.EventHandling
                     var newEvent = new SendMessageIntegrationEven
                     {
                         Body = @event.Content,
-                        ContentType = Constants.CONTENT_TYPE_TEXT_XML,
+                        ContentType = Constants.ContentTypeTextXml,
                         HttpMethod = "POST",
                         Url = new Uri(WebRequestHelper.CombineUrl(subscriber.CallbackEndpoint, "/voyagePlans"))
                     };

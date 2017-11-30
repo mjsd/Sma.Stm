@@ -1,19 +1,16 @@
-﻿using Sma.Stm.EventBus.Abstractions;
+﻿using System;
+using System.Net;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Sma.Stm.Common;
+using Sma.Stm.Common.Web;
+using Sma.Stm.EventBus.Abstractions;
 using Sma.Stm.EventBus.Events;
 using Sma.Stm.Services.AuthorizationService.DataAccess;
 using Sma.Stm.Services.NotificationService.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Sma.Stm.Common.Web;
-using Newtonsoft.Json;
-using System.Net;
-using Microsoft.AspNetCore.Http;
-using Sma.Stm.Common;
 
-namespace Sma.Stm.Services.GenericMessageService.IntegrationEvents.EventHandling
+namespace Sma.Stm.Services.NotificationService.IntegrationEvents.EventHandling
 {
     public class NotificationIntegrationEventHandler : IIntegrationEventHandler<NotificationIntegrationEvent>
     {
@@ -45,7 +42,7 @@ namespace Sma.Stm.Services.GenericMessageService.IntegrationEvents.EventHandling
 
             var headers = new WebHeaderCollection
             {
-                { HttpRequestHeader.ContentType, Constants.CONTENT_TYPE_APPLICATION_JSON }
+                { HttpRequestHeader.ContentType, Constants.ContentTypeApplicationJson }
             };
 
             var subscribers = await _dbContext.Subscribers.ToListAsync();

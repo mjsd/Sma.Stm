@@ -1,14 +1,9 @@
 using System;
-using System.Linq;
-using System.IO;
-using System.Text;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
+using System.Text;
 using Newtonsoft.Json;
 
-namespace Sma.Stm.Ssc
+namespace Sma.Stm.Ssc.Contract
 {
     /// <summary>
     /// 
@@ -19,10 +14,10 @@ namespace Sma.Stm.Ssc
         /// <summary>
         /// Initializes a new instance of the <see cref="FindIdentitiesRequestObj" /> class.
         /// </summary>
-        /// <param name="OrganisationId">OrganisationId.</param>
-        public FindIdentitiesRequestObj(string OrganisationId = null)
+        /// <param name="organisationId">OrganisationId.</param>
+        public FindIdentitiesRequestObj(string organisationId = null)
         {
-            this.OrganisationId = OrganisationId;
+            this.OrganisationId = organisationId;
             
         }
 
@@ -96,7 +91,7 @@ namespace Sma.Stm.Ssc
             // credit: http://stackoverflow.com/a/263416/677735
             unchecked // Overflow is fine, just wrap
             {
-                int hash = 41;
+                var hash = 41;
                 // Suitable nullity checks etc, of course :)
                     if (this.OrganisationId != null)
                     hash = hash * 59 + this.OrganisationId.GetHashCode();

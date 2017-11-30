@@ -21,16 +21,11 @@
  */
 
 using System;
-using System.Linq;
-using System.IO;
-using System.Text;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
+using System.Text;
 using Newtonsoft.Json;
 
-namespace Sma.Stm.Ssc
+namespace Sma.Stm.Ssc.Contract
 {
     /// <summary>
     /// 
@@ -41,12 +36,12 @@ namespace Sma.Stm.Ssc
         /// <summary>
         /// Initializes a new instance of the <see cref="ServiceRegistryGeneralResponseObj" /> class.
         /// </summary>
-        /// <param name="Body">Body.</param>
-        /// <param name="StatusCode">StatusCode.</param>
-        public ServiceRegistryGeneralResponseObj(string Body = null, long? StatusCode = null)
+        /// <param name="body">Body.</param>
+        /// <param name="statusCode">StatusCode.</param>
+        public ServiceRegistryGeneralResponseObj(string body = null, long? statusCode = null)
         {
-            this.Body = Body;
-            this.StatusCode = StatusCode;
+            this.Body = body;
+            this.StatusCode = statusCode;
             
         }
 
@@ -132,7 +127,7 @@ namespace Sma.Stm.Ssc
             // credit: http://stackoverflow.com/a/263416/677735
             unchecked // Overflow is fine, just wrap
             {
-                int hash = 41;
+                var hash = 41;
                 // Suitable nullity checks etc, of course :)
                     if (this.Body != null)
                     hash = hash * 59 + this.Body.GetHashCode();

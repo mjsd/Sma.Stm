@@ -3,12 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Sma.Stm.Common.PlugIns.ExtendedValidation;
 using Sma.Stm.Common.Xml;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Schema;
 
@@ -16,7 +13,7 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
 {
     public abstract class MessageControllerBase : Controller
     {
-        protected IConfiguration _configuration;
+        protected IConfiguration Configuration;
 
         protected void Validate(string message, IHostingEnvironment env)
         {
@@ -29,18 +26,18 @@ namespace Sma.Stm.Services.GenericMessageService.Controllers
 
         protected string GetDataId(string message)
         {
-            var dataIdXPath = _configuration.GetValue<string>("DataIdXPath");
+            var dataIdXPath = Configuration.GetValue<string>("DataIdXPath");
             var parser = new XmlParser(message);
-            parser.SetNamespaces(_configuration.GetValue<string>("Namespaces"));
+            parser.SetNamespaces(Configuration.GetValue<string>("Namespaces"));
 
             return parser.GetValue(dataIdXPath);
         }
 
         protected string GetStatus(string message)
         {
-            var dataIdXPath = _configuration.GetValue<string>("StatusXPath");
+            var dataIdXPath = Configuration.GetValue<string>("StatusXPath");
             var parser = new XmlParser(message);
-            parser.SetNamespaces(_configuration.GetValue<string>("Namespaces"));
+            parser.SetNamespaces(Configuration.GetValue<string>("Namespaces"));
 
             return parser.GetValue(dataIdXPath);
         }

@@ -9,16 +9,11 @@
  */
 
 using System;
-using System.Linq;
-using System.IO;
-using System.Text;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
+using System.Text;
 using Newtonsoft.Json;
 
-namespace Sma.Stm.Ssc
+namespace Sma.Stm.Ssc.Contract
 {
     /// <summary>
     /// 
@@ -29,30 +24,30 @@ namespace Sma.Stm.Ssc
         /// <summary>
         /// Initializes a new instance of the <see cref="ServiceInstance" /> class.
         /// </summary>
-        /// <param name="Comment">Comment.</param>
-        /// <param name="EndpointType">EndpointType.</param>
-        /// <param name="EndpointUri">EndpointUri.</param>
-        /// <param name="InstanceAsXml">InstanceAsXml.</param>
-        /// <param name="InstanceId">InstanceId.</param>
-        /// <param name="Keywords">Keywords.</param>
-        /// <param name="Name">Name.</param>
-        /// <param name="OrganizationId">OrganizationId.</param>
-        /// <param name="Status">Status.</param>
-        /// <param name="Unlocode">Unlocode.</param>
-        /// <param name="Version">Version.</param>
-        public ServiceInstance(string Comment = null, string EndpointType = null, string EndpointUri = null, Xml InstanceAsXml = null, string InstanceId = null, string Keywords = null, string Name = null, string OrganizationId = null, string Status = null, string Unlocode = null, string Version = null)
+        /// <param name="comment">Comment.</param>
+        /// <param name="endpointType">EndpointType.</param>
+        /// <param name="endpointUri">EndpointUri.</param>
+        /// <param name="instanceAsXml">InstanceAsXml.</param>
+        /// <param name="instanceId">InstanceId.</param>
+        /// <param name="keywords">Keywords.</param>
+        /// <param name="name">Name.</param>
+        /// <param name="organizationId">OrganizationId.</param>
+        /// <param name="status">Status.</param>
+        /// <param name="unlocode">Unlocode.</param>
+        /// <param name="version">Version.</param>
+        public ServiceInstance(string comment = null, string endpointType = null, string endpointUri = null, Xml instanceAsXml = null, string instanceId = null, string keywords = null, string name = null, string organizationId = null, string status = null, string unlocode = null, string version = null)
         {
-            this.Comment = Comment;
-            this.EndpointType = EndpointType;
-            this.EndpointUri = EndpointUri;
-            this.InstanceAsXml = InstanceAsXml;
-            this.InstanceId = InstanceId;
-            this.Keywords = Keywords;
-            this.Name = Name;
-            this.OrganizationId = OrganizationId;
-            this.Status = Status;
-            this.Unlocode = Unlocode;
-            this.Version = Version;
+            this.Comment = comment;
+            this.EndpointType = endpointType;
+            this.EndpointUri = endpointUri;
+            this.InstanceAsXml = instanceAsXml;
+            this.InstanceId = instanceId;
+            this.Keywords = keywords;
+            this.Name = name;
+            this.OrganizationId = organizationId;
+            this.Status = status;
+            this.Unlocode = unlocode;
+            this.Version = version;
             
         }
 
@@ -246,7 +241,7 @@ namespace Sma.Stm.Ssc
             // credit: http://stackoverflow.com/a/263416/677735
             unchecked // Overflow is fine, just wrap
             {
-                int hash = 41;
+                var hash = 41;
                 // Suitable nullity checks etc, of course :)
                     if (this.Comment != null)
                     hash = hash * 59 + this.Comment.GetHashCode();

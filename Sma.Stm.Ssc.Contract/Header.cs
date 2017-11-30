@@ -1,14 +1,9 @@
 using System;
-using System.Linq;
-using System.IO;
-using System.Text;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
+using System.Text;
 using Newtonsoft.Json;
 
-namespace Sma.Stm.Ssc
+namespace Sma.Stm.Ssc.Contract
 {
     /// <summary>
     /// 
@@ -19,12 +14,12 @@ namespace Sma.Stm.Ssc
         /// <summary>
         /// Initializes a new instance of the <see cref="Header" /> class.
         /// </summary>
-        /// <param name="Key">Key.</param>
-        /// <param name="Value">Value.</param>
-        public Header(string Key = null, string Value = null)
+        /// <param name="key">Key.</param>
+        /// <param name="value">Value.</param>
+        public Header(string key = null, string value = null)
         {
-            this.Key = Key;
-            this.Value = Value;
+            this.Key = key;
+            this.Value = value;
             
         }
 
@@ -110,7 +105,7 @@ namespace Sma.Stm.Ssc
             // credit: http://stackoverflow.com/a/263416/677735
             unchecked // Overflow is fine, just wrap
             {
-                int hash = 41;
+                var hash = 41;
                 // Suitable nullity checks etc, of course :)
                     if (this.Key != null)
                     hash = hash * 59 + this.Key.GetHashCode();

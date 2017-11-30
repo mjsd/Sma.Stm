@@ -2,7 +2,6 @@
 using Sma.Stm.EventBus.Events;
 using Sma.Stm.Services.SubscriptionService.DataAccess;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;

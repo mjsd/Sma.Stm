@@ -1,18 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Sma.Stm.Services.GenericMessageService.Models;
 using Sma.Stm.Services.GenericMessageService.DataAccess.EntityConfigurations;
 using Microsoft.EntityFrameworkCore.Design;
-using System.Threading;
 
 namespace Sma.Stm.Services.GenericMessageService.DataAccess
 {
     public class GenericMessageDbContext : DbContext
     {
-        public GenericMessageDbContext(DbContextOptions<GenericMessageDbContext> options) : base(options)
+        public GenericMessageDbContext(DbContextOptions options) : base(options)
         {
         }
 

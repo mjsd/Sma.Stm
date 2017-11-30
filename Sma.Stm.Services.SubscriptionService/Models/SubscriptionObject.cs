@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Threading.Tasks;
 
 namespace Sma.Stm.Services.SubscriptionService.Models
 {
@@ -34,7 +31,7 @@ namespace Sma.Stm.Services.SubscriptionService.Models
         /// 
         /// </summary>
         [DataMember(Name = "endpointURL")]
-        public Uri EndpointURL { get; set; }
+        public Uri EndpointUrl { get; set; }
 
         /// <summary>
         /// 

@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using Sma.Stm.Ssc;
-using Newtonsoft.Json;
 using Sma.Stm.EventBus.Abstractions;
 using Sma.Stm.Common.Swagger;
+using Sma.Stm.Ssc.Contract;
 
 namespace Sma.Stm.Ssc.Services.Private.Controllers
 {
@@ -40,7 +36,7 @@ namespace Sma.Stm.Ssc.Services.Private.Controllers
         [SwaggerResponseContentType(responseType: "application/json", Exclusive = true)]
         [SwaggerRequestContentType(requestType: "application/json", Exclusive = true)]
         [SwaggerResponse(200, type: typeof(CallServiceResponseObj))]
-        public virtual IActionResult CallService([FromBody]CallServiceRequestObj request)
+        public IActionResult CallService([FromBody]CallServiceRequestObj request)
         {
             try
             {
@@ -57,7 +53,6 @@ namespace Sma.Stm.Ssc.Services.Private.Controllers
         /// findIdentities
         /// </summary>
         /// <remarks>Facilitate the communication with the identity service in order to discover the organizations part of the STM infrastructure.</remarks>
-        /// <param name="request">request</param>
         /// <response code="200">findIdentities response</response>
         /// <response code="201">Created</response>
         /// <response code="401">Unauthorized</response>
@@ -67,7 +62,7 @@ namespace Sma.Stm.Ssc.Services.Private.Controllers
         [Route("findIdentities")]
         [SwaggerResponse(200, type: typeof(FindIdentitiesResponseObj))]
         [SwaggerResponseContentType(responseType: "application/json", Exclusive = true)]
-        public virtual IActionResult FindIdentities()
+        public IActionResult FindIdentities()
         {
             try
             {
@@ -95,7 +90,7 @@ namespace Sma.Stm.Ssc.Services.Private.Controllers
         [SwaggerResponse(200, type: typeof(FindServicesResponseObj))]
         [SwaggerResponseContentType(responseType: "application/json", Exclusive = true)]
         [SwaggerRequestContentType(requestType: "application/json", Exclusive = true)]
-        public virtual IActionResult FindServices([FromBody]FindServicesRequestObj request)
+        public IActionResult FindServices([FromBody]FindServicesRequestObj request)
         {
             try
             {

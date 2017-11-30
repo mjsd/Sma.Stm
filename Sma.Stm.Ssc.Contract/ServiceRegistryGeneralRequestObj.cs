@@ -21,16 +21,13 @@
  */
 
 using System;
-using System.Linq;
-using System.IO;
-using System.Text;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Text;
 using Newtonsoft.Json;
 
-namespace Sma.Stm.Ssc
+namespace Sma.Stm.Ssc.Contract
 {
     /// <summary>
     /// 
@@ -41,16 +38,16 @@ namespace Sma.Stm.Ssc
         /// <summary>
         /// Initializes a new instance of the <see cref="ServiceRegistryGeneralRequestObj" /> class.
         /// </summary>
-        /// <param name="Body">Body.</param>
-        /// <param name="Headers">Headers.</param>
-        /// <param name="RequestType">RequestType.</param>
-        /// <param name="Url">Url.</param>
-        public ServiceRegistryGeneralRequestObj(string Body = null, List<Header> Headers = null, string RequestType = null, string Url = null)
+        /// <param name="body">Body.</param>
+        /// <param name="headers">Headers.</param>
+        /// <param name="requestType">RequestType.</param>
+        /// <param name="url">Url.</param>
+        public ServiceRegistryGeneralRequestObj(string body = null, List<Header> headers = null, string requestType = null, string url = null)
         {
-            this.Body = Body;
-            this.Headers = Headers;
-            this.RequestType = RequestType;
-            this.Url = Url;
+            this.Body = body;
+            this.Headers = headers;
+            this.RequestType = requestType;
+            this.Url = url;
             
         }
 
@@ -160,7 +157,7 @@ namespace Sma.Stm.Ssc
             // credit: http://stackoverflow.com/a/263416/677735
             unchecked // Overflow is fine, just wrap
             {
-                int hash = 41;
+                var hash = 41;
                 // Suitable nullity checks etc, of course :)
                     if (this.Body != null)
                     hash = hash * 59 + this.Body.GetHashCode();

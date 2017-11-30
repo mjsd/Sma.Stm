@@ -1,14 +1,10 @@
 ﻿using Sma.Stm.EventBus.Abstractions;
 using Sma.Stm.EventBus.Events;
 using Sma.Stm.Services.SubscriptionService.DataAccess;
-using Sma.Stm.Services.SubscriptionService.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Sma.Stm.Common;
-using Sma.Stm.Common.Web;
 
 namespace Sma.Stm.Services.SubscriptionService.IntegrationEvents.EventHandling
 {

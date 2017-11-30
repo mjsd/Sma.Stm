@@ -9,16 +9,11 @@
  */
 
 using System;
-using System.Linq;
-using System.IO;
-using System.Text;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
+using System.Text;
 using Newtonsoft.Json;
 
-namespace Sma.Stm.Ssc
+namespace Sma.Stm.Ssc.Contract
 {
     /// <summary>
     /// 
@@ -29,14 +24,14 @@ namespace Sma.Stm.Ssc
         /// <summary>
         /// Initializes a new instance of the <see cref="FindServicesRequestObj" /> class.
         /// </summary>
-        /// <param name="Filter">Filter.</param>
-        /// <param name="Page">Page.</param>
-        /// <param name="PageSize">PageSize.</param>
-        public FindServicesRequestObj(FindServicesRequestObjFilter Filter = null, long? Page = null, long? PageSize = null)
+        /// <param name="filter">Filter.</param>
+        /// <param name="page">Page.</param>
+        /// <param name="pageSize">PageSize.</param>
+        public FindServicesRequestObj(FindServicesRequestObjFilter filter = null, long? page = null, long? pageSize = null)
         {
-            this.Filter = Filter;
-            this.Page = Page;
-            this.PageSize = PageSize;
+            this.Filter = filter;
+            this.Page = page;
+            this.PageSize = pageSize;
             
         }
 
@@ -134,7 +129,7 @@ namespace Sma.Stm.Ssc
             // credit: http://stackoverflow.com/a/263416/677735
             unchecked // Overflow is fine, just wrap
             {
-                int hash = 41;
+                var hash = 41;
                 // Suitable nullity checks etc, of course :)
                     if (this.Filter != null)
                     hash = hash * 59 + this.Filter.GetHashCode();

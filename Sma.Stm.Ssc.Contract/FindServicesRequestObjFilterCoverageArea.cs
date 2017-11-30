@@ -9,16 +9,11 @@
  */
 
 using System;
-using System.Linq;
-using System.IO;
-using System.Text;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
+using System.Text;
 using Newtonsoft.Json;
 
-namespace Sma.Stm.Ssc
+namespace Sma.Stm.Ssc.Contract
 {
     /// <summary>
     /// 
@@ -29,12 +24,12 @@ namespace Sma.Stm.Ssc
         /// <summary>
         /// Initializes a new instance of the <see cref="FindServicesRequestObjFilterCoverageArea" /> class.
         /// </summary>
-        /// <param name="CoverageType">CoverageType.</param>
-        /// <param name="Value">Value.</param>
-        public FindServicesRequestObjFilterCoverageArea(string CoverageType = null, string Value = null)
+        /// <param name="coverageType">CoverageType.</param>
+        /// <param name="value">Value.</param>
+        public FindServicesRequestObjFilterCoverageArea(string coverageType = null, string value = null)
         {
-            this.CoverageType = CoverageType;
-            this.Value = Value;
+            this.CoverageType = coverageType;
+            this.Value = value;
             
         }
 
@@ -120,7 +115,7 @@ namespace Sma.Stm.Ssc
             // credit: http://stackoverflow.com/a/263416/677735
             unchecked // Overflow is fine, just wrap
             {
-                int hash = 41;
+                var hash = 41;
                 // Suitable nullity checks etc, of course :)
                     if (this.CoverageType != null)
                     hash = hash * 59 + this.CoverageType.GetHashCode();

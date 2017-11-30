@@ -3,15 +3,11 @@ using Sma.Stm.EventBus.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 
 namespace Sma.Stm.EventBus
 {
     public partial class InMemoryEventBusSubscriptionsManager : IEventBusSubscriptionsManager
     {
-
-
         private readonly Dictionary<string, List<SubscriptionInfo>> _handlers;
         private readonly List<Type> _eventTypes;
 
@@ -54,14 +50,8 @@ namespace Sma.Stm.EventBus
                     $"Handler Type {handlerType.Name} already registered for '{eventName}'", nameof(handlerType));
             }
 
-            if (isDynamic)
-            {
-                _handlers[eventName].Add(SubscriptionInfo.Dynamic(handlerType));
-            }
-            else
-            {
-                _handlers[eventName].Add(SubscriptionInfo.Typed(handlerType));
-            }
+            _handlers[eventName]
+                .Add(isDynamic ? SubscriptionInfo.Dynamic(handlerType) : SubscriptionInfo.Typed(handlerType));
         }
 
 
@@ -114,7 +104,7 @@ namespace Sma.Stm.EventBus
             var handler = OnEventRemoved;
             if (handler != null)
             {
-                OnEventRemoved(this, eventName);
+                OnEventRemoved?.Invoke(this, eventName);
             }
         }
 
@@ -124,7 +114,6 @@ namespace Sma.Stm.EventBus
         {
             return DoFindSubscriptionToRemove(eventName, typeof(TH));
         }
-
 
         private SubscriptionInfo FindSubscriptionToRemove<T, TH>()
              where T : IntegrationEvent
@@ -142,7 +131,6 @@ namespace Sma.Stm.EventBus
             }
 
             return _handlers[eventName].SingleOrDefault(s => s.HandlerType == handlerType);
-
         }
 
         public bool HasSubscriptionsForEvent<T>() where T : IntegrationEvent

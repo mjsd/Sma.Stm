@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Sma.Stm.Plugins.Rtz
+namespace Sma.Stm.Plugins.Rtz.Parser
 {
-    public class RtzParserFactory
+    public static class RtzParserFactory
     {
         public static IRtzParser Create(string xml)
         {
@@ -14,12 +10,13 @@ namespace Sma.Stm.Plugins.Rtz
             {
                 return new Rtz10Parser(xml);
             }
-            else if (xml.Contains("xmlns=\"http://www.cirm.org/RTZ/1/1\""))
+
+            if (xml.Contains("xmlns=\"http://www.cirm.org/RTZ/1/1\""))
             {
                 return new Rtz11Parser(xml);
             }
-            else
-                throw new Exception("Invalid RTZ");
+
+            throw new Exception("Invalid RTZ");
         }
     }
 }

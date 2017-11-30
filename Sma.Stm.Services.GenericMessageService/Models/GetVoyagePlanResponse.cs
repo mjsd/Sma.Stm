@@ -1,10 +1,7 @@
 using System;
 using System.Linq;
-using System.IO;
 using System.Text;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -19,12 +16,12 @@ namespace Sma.Stm.Services.GenericMessageService.Models
         /// <summary>
         /// Initializes a new instance of the <see cref="GetVoyagePlanResponse" /> class.
         /// </summary>
-        /// <param name="LastInteractionTime">Gets or Sets LastInteractionTime.</param>
-        /// <param name="VoyagePlans">Gets or Sets VoyagePlan.</param>
-        public GetVoyagePlanResponse(DateTime? LastInteractionTime = null, List<VoyagePlan> VoyagePlans = null)
+        /// <param name="lastInteractionTime">Gets or Sets LastInteractionTime.</param>
+        /// <param name="voyagePlans">Gets or Sets VoyagePlan.</param>
+        public GetVoyagePlanResponse(DateTime? lastInteractionTime = null, List<VoyagePlan> voyagePlans = null)
         {
-            this.LastInteractionTime = LastInteractionTime;
-            this.VoyagePlans = VoyagePlans;
+            this.LastInteractionTime = lastInteractionTime;
+            this.VoyagePlans = voyagePlans;
         }
 
         /// <summary>
@@ -111,7 +108,7 @@ namespace Sma.Stm.Services.GenericMessageService.Models
             // credit: http://stackoverflow.com/a/263416/677735
             unchecked // Overflow is fine, just wrap
             {
-                int hash = 41;
+                var hash = 41;
                 // Suitable nullity checks etc, of course :)
                     if (this.LastInteractionTime != null)
                     hash = hash * 59 + this.LastInteractionTime.GetHashCode();

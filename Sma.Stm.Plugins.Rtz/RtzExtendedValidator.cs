@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Sma.Stm.Common;
 using System;
+using Sma.Stm.Plugins.Rtz.Parser;
 
 namespace Sma.Stm.Plugins.Rtz
 {
     public class RtzExtendedValidator : IExtendedValidator
     {
-        public List<string> Validate(string xml)
+        public IEnumerable<string> Validate(string xml)
         {
             var result = new List<string>();
             var parser = RtzParserFactory.Create(xml);
@@ -19,7 +20,7 @@ namespace Sma.Stm.Plugins.Rtz
             {
                 result.Add("Vayage id is required");
             }
-            else if (!new Regex(Constants.UVID_FORMAT).IsMatch(uvid))
+            else if (!new Regex(Constants.UvidFormat).IsMatch(uvid))
             {
                 result.Add("Invalid voyage id");
             }
@@ -37,9 +38,9 @@ namespace Sma.Stm.Plugins.Rtz
             }
 
             // If RTZ 1.1 check for STM extension
-            if (parser is Rtz11Parser rtz11parser)
+            if (parser is Rtz11Parser rtz11Parser)
             {
-                if (string.IsNullOrEmpty(rtz11parser.StmRouteInfoExtension))
+                if (string.IsNullOrEmpty(rtz11Parser.StmRouteInfoExtension))
                 {
                     result.Add("StmRouteInfoExtension is required");
                 }
@@ -52,7 +53,7 @@ namespace Sma.Stm.Plugins.Rtz
             }
             else
             {
-                int status = Convert.ToInt32(parser.RouteStatus);
+                var status = Convert.ToInt32(parser.RouteStatus);
                 if (status < 1 || status > 8)
                 {
                     result.Add("Invalid status value. Must be between 1 and 8");

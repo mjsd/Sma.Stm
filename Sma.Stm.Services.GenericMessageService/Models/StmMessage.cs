@@ -9,12 +9,7 @@
  */
 
 using System;
-using System.Linq;
-using System.IO;
 using System.Text;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -29,10 +24,10 @@ namespace Sma.Stm.Services.GenericMessageService.Models
         /// <summary>
         /// Initializes a new instance of the <see cref="StmMessage" /> class.
         /// </summary>
-        /// <param name="Message">Message.</param>
-        public StmMessage(string Message = null)
+        /// <param name="message">Message.</param>
+        public StmMessage(string message = null)
         {
-            this.Message = Message;
+            this.Message = message;
             
         }
 
@@ -106,7 +101,7 @@ namespace Sma.Stm.Services.GenericMessageService.Models
             // credit: http://stackoverflow.com/a/263416/677735
             unchecked // Overflow is fine, just wrap
             {
-                int hash = 41;
+                var hash = 41;
                 // Suitable nullity checks etc, of course :)
                     if (this.Message != null)
                     hash = hash * 59 + this.Message.GetHashCode();

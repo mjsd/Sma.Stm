@@ -2,11 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.EntityFrameworkCore.Storage.Internal;
 using Sma.Stm.Services.AuthorizationService.DataAccess;
-using Sma.Stm.Services.NotificationService.Models;
 using System;
 
 namespace Sma.Stm.Services.NotificationService.Migrations
